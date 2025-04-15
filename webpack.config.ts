@@ -15,8 +15,8 @@ module.exports = {
                 exclude: /node_modules/,
             },
             {
-                test: /\.s[ac]ss$/,
-                use: ['to-string-loader', 'css-loader', 'sass-loader'],
+                test: /\.css$/,
+                use: ['to-string-loader', 'css-loader'],
             },
             {
                 test: /\.html$/,

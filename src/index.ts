@@ -1,11 +1,12 @@
 import templateHTML from './template.html';
-import styles from './style.scss';
+import styles from './style.css';
 
 const templateElement = document.createElement('template');
 templateElement.innerHTML = templateHTML;
 
 const styleSheet = new CSSStyleSheet();
 styleSheet.replaceSync(styles);
+
 
 class WidgetElement extends HTMLElement {
     static observedAttributes = ["color", "size"];
@@ -40,6 +41,10 @@ class WidgetElement extends HTMLElement {
     }
     attributeChangedCallback(name: string, oldValue: string | null, newValue: string | null) {
         console.log(`Attribute ${name} has changed.`);
+    }
+
+    render() {
+        return ``
     }
 }
 customElements.define("marketplace-widget", WidgetElement);

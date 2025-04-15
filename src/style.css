@@ -1,0 +1,10 @@
+:host {
+    --font-family: Arial, sans-serif;
+    --bg-color-primary: white;
+    --bg-color-secondary: gray;
+}
+
+:host>div {
+    font-family: var(--font-family);
+    background-color: var(--bg-color-primary);
+}
