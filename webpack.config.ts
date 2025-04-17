@@ -1,7 +1,11 @@
-const path = require('path');
+import { fileURLToPath } from 'url';
+import path from 'path';
 
-module.exports = {
-    entry: './src/index.ts',
+export const __filename = fileURLToPath(import.meta.url);
+export const __dirname = path.dirname(__filename);
+
+export default {
+    entry: './src/addons-widget.ts',
     output: {
         filename: 'bundle.js',
         path: path.resolve(__dirname, 'dist'),
