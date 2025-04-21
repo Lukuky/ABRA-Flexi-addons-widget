@@ -303,12 +303,16 @@ export class WidgetElement extends LitElement {
         </div>`;
     }
 
+    _removeStyles(element: HTMLElement) {
+        Array.from(element.getElementsByTagName('style')).forEach(style => element.removeChild(style));
+        Array.from(element.getElementsByTagName('font')).forEach(font => element.removeChild(font));
+        Array.from(element.getElementsByTagName('*')).forEach(element => element.removeAttribute("style"));
+    }
+
     _retrievePerex(addon: Addon) {
         const perex = document.createElement('p');
         perex.innerHTML = addon.perex;
-        Array.from(perex.getElementsByTagName('style')).forEach(style => perex.removeChild(style));
-        Array.from(perex.getElementsByTagName('font')).forEach(font => perex.removeChild(font));
-        Array.from(perex.getElementsByTagName('*')).forEach(element => element.removeAttribute("style"));
+        this._removeStyles(perex);
         return perex;
     }
 
@@ -330,7 +334,7 @@ export class WidgetElement extends LitElement {
         newContent.id = 'content';
         newContent.classList.add('detail');
         newContent.innerHTML = this._selectedAddon.description;
-        Array.from(newContent.getElementsByTagName('style')).forEach(style => newContent.removeChild(style));
+        this._removeStyles(newContent);
         return newContent;
     }
 
@@ -338,9 +342,9 @@ export class WidgetElement extends LitElement {
         return html`
         <footer class="panel">
                 ${this._widgetState == 'detail'
+                // <image src='${this._selectedAddon.photo.toString()}'></image>
                 ? html`
-                <image src='${this._selectedAddon.photo.toString()}'></image>
-                <button @click="${() => { }}">Instalovat</button>
+                <button class="centered" @click="${() => { }}">Instalovat</button>
                 `
                 : html`
                 <div class="panel centered">
