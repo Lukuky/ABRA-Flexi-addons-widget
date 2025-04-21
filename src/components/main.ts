@@ -52,6 +52,13 @@ export class WidgetElement extends LitElement {
             padding: 0;
             margin: 0;
         }
+
+        button, select {
+            font-size: 1.1rem;
+            border: var(--border-main);
+            background-color: var(--bg-color-primary, #eee);
+            padding: 0.2em;
+        }
         
         #container {
             display: flex;
@@ -64,6 +71,7 @@ export class WidgetElement extends LitElement {
 
         .panel {
             display: grid;
+            align-items: center;
             grid-template-columns: 1fr auto 1fr;
             gap: 1em;
         }
@@ -76,6 +84,10 @@ export class WidgetElement extends LitElement {
         header, footer {
             padding: 0.3em;
             color: #666;
+        }
+
+        #selectLanguage {
+            justify-self: end;
         }
 
         #content {
@@ -133,10 +145,6 @@ export class WidgetElement extends LitElement {
         
         .addon p {
             overflow-y: hidden;
-        }
-
-        #pager {
-            grid-column-start: 2;
         }
     `;
 
@@ -279,7 +287,7 @@ export class WidgetElement extends LitElement {
                     <button @click="${this._search}">Search</button>
                 </div>
                 `}
-                <select>
+                <select id="selectLanguage">
                     ${WidgetElement.languages.map((code) => html`
                         <option value="${code}">${code}</option>
                     `)}
