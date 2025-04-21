@@ -5,9 +5,9 @@ export const __filename = fileURLToPath(import.meta.url);
 export const __dirname = path.dirname(__filename);
 
 export default {
-    entry: './src/addons-widget.ts',
+    entry: './src/index.ts',
     output: {
-        filename: 'bundle.js',
+        filename: 'addons-widget.js',
         path: path.resolve(__dirname, 'dist'),
         clean: true,
     },
