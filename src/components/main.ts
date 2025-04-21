@@ -41,6 +41,7 @@ export class WidgetElement extends LitElement {
     static styles = css`
         :host {
             font-family: var(--font-family, Arial, sans-serif);
+            font-size: 0.9rem;
             --card-height: 15rem;
             --card-gap: 1rem;
             --border-main: solid #ccc 0.2em;
@@ -119,9 +120,13 @@ export class WidgetElement extends LitElement {
         }
 
         .addon img {
-            object-fit: fill;
+            object-fit: cover;
             max-width: 100%;
             height: 4em;
+        }
+        
+        .addon p {
+            overflow-y: hidden;
         }
 
         #pager {
@@ -284,13 +289,23 @@ export class WidgetElement extends LitElement {
         </div>`;
     }
 
+    _retrievePerex(addon: Addon) {
+        const perex = document.createElement('p');
+        perex.innerHTML = addon.perex;
+        Array.from(perex.getElementsByTagName('style')).forEach(style => perex.removeChild(style));
+        Array.from(perex.getElementsByTagName('font')).forEach(font => perex.removeChild(font));
+        Array.from(perex.getElementsByTagName('*')).forEach(element => element.removeAttribute("style"));
+        return perex;
+    }
+
     _renderOverview() {
         return html`
         <div id='content' class='cards'>
         ${repeat(this._currentAddons, (addon) => addon.id, (addon) => html`
                 <article class='addon' @click="${() => this._goToDetail(addon)}">
                     <image src='${addon.photo.toString()}'></image>
-                    <h2>${addon.perex}</h2>
+                    <h2>Název doplňku</h2>
+                    ${this._retrievePerex(addon)}
                 </article>
             `)}
         </div>`;
