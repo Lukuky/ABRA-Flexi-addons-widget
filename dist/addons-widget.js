@@ -133,7 +133,13 @@
             height: var(--card-height);
             padding: 1em;
             background-color: #fff;
+            box-shadow: none;
+            transition: box-shadow 0.2s ease-in;
             cursor: pointer;
+        }
+
+        .addon:hover {
+            box-shadow: 0 0 1em #bbb;
         }
 
         .addon img {
