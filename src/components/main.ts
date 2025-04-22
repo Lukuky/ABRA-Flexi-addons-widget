@@ -86,6 +86,10 @@ export class WidgetElement extends LitElement {
             color: #666;
         }
 
+        #buttonBack {
+            justify-self: left;
+        }
+
         #selectLanguage {
             justify-self: end;
         }
@@ -142,9 +146,22 @@ export class WidgetElement extends LitElement {
             max-width: 100%;
             height: 4em;
         }
-        
         .addon p {
             overflow-y: hidden;
+        }
+
+
+        .detail h2 {
+            padding: 1em 0 0.5em 0;
+        }
+
+        .detail li {
+            margin-left: 1em;
+        }
+
+        .detail img {
+            max-width: 100%;
+            margin: 0.5em;
         }
     `;
 
@@ -220,6 +237,8 @@ export class WidgetElement extends LitElement {
             this._lastPage = data.last;
             this._addonsTotalPages = data.totalPages;
             this._currentAddons = data.content;
+
+            return data;
         },
 
         args: () => [this._language, this._selectedCategory, this._addonsPageNum, this.addonsPerPage]
@@ -257,8 +276,8 @@ export class WidgetElement extends LitElement {
             <header class="panel">
                 ${this._widgetState == 'detail'
                 ? html`
-                <button @click="${this._goBack}">Back</button>
-                <h1 class='centered'>${this._selectedAddon.perex}</h1>
+                <button id="buttonBack" @click="${this._goBack}">Back</button>
+                <h1 class='centered'>Název doplňku</h1>
                 `
                 : html`
                 <h1 class='centered'>Doplňky ABRA Flexi</h1>
@@ -303,10 +322,12 @@ export class WidgetElement extends LitElement {
         </div>`;
     }
 
-    _removeStyles(element: HTMLElement) {
-        Array.from(element.getElementsByTagName('style')).forEach(style => element.removeChild(style));
-        Array.from(element.getElementsByTagName('font')).forEach(font => element.removeChild(font));
-        Array.from(element.getElementsByTagName('*')).forEach(element => element.removeAttribute("style"));
+    _removeStyles(element: HTMLElement): void {
+        Array.from(element.getElementsByTagName('style')).forEach(style => style.parentNode?.removeChild(style));
+        Array.from(element.getElementsByTagName('*')).forEach(element => {
+            element.removeAttribute("style");
+            element.removeAttribute("color");
+        });
     }
 
     _retrievePerex(addon: Addon) {
