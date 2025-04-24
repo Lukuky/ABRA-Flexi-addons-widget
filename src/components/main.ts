@@ -128,7 +128,6 @@ export class WidgetElement extends LitElement {
         .cards {
             display: flex;
             flex-flow: row wrap;
-            align-content: flex-start;
             overflow-y: scroll;
             gap: var(--card-gap);
         }
@@ -154,8 +153,8 @@ export class WidgetElement extends LitElement {
         }
 
         .addon img {
-            object-fit: cover;
-            max-width: 100%;
+            object-fit: contain;
+            max-width: 80%;
             height: 4em;
         }
         .addon p {
@@ -228,7 +227,7 @@ export class WidgetElement extends LitElement {
     private _searchPhrase: string = "";
 
     @property({ type: Number })
-    addonsPerPage = 6;
+    addonsPerPage = 8;
 
     private _TaskCategories = new Task(this, {
 
