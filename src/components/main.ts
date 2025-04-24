@@ -54,10 +54,11 @@ export class WidgetElement extends LitElement {
             margin: 0;
         }
 
-        button, select {
+        button, select, input {
             font-size: 1.1rem;
             border: var(--border-main);
             background-color: var(--bg-color-primary, #eee);
+            max-width: 100%;
             padding: 0.2em;
         }
         
@@ -112,7 +113,17 @@ export class WidgetElement extends LitElement {
             grid-column-start: 1;
             grid-column-end: 4;
             order: 2;
+            /* position: relative; */
+            display: flex;
+            flex-flow: row wrap;
+            justify-content: space-between;
+            gap: 1em;
         }
+
+        /* #searchFilters label {
+            position: absolute;
+            top: -1em;
+        } */
 
         .cards {
             display: flex;
@@ -213,6 +224,9 @@ export class WidgetElement extends LitElement {
     @state()
     private _selectedCategory: number | null = null;
 
+    @state()
+    private _searchPhrase: string = "";
+
     @property({ type: Number })
     addonsPerPage = 6;
 
@@ -236,12 +250,13 @@ export class WidgetElement extends LitElement {
 
     private _addons = new Task(this, {
 
-        task: async ([langOpt, category, page, size], { signal }) => {
+        task: async ([langOpt, category, page, size, search], { signal }) => {
             let url = new URL('https://support.flexibee.eu/api/addons/search');
             // url.searchParams.append('langOpt', `\'${langOpt}\'`);
             if (category) url.searchParams.append('categoryId', category.toString());
             url.searchParams.append('page', page.toString());
             url.searchParams.append('size', size.toString());
+            if (search) url.searchParams.append('search', search);
             const request = new Request(url);
             const response = await fetch(request, { signal });
 
@@ -257,7 +272,7 @@ export class WidgetElement extends LitElement {
             return data;
         },
 
-        args: () => [this._language, this._selectedCategory, this._addonsPageNum, this.addonsPerPage]
+        args: () => [this._language, this._selectedCategory, this._addonsPageNum, this.addonsPerPage, this._searchPhrase]
 
     });
 
@@ -287,9 +302,16 @@ export class WidgetElement extends LitElement {
         this._selectedCategory = parseInt((e.target as HTMLSelectElement).value);
     }
 
+    _clear() {
+        this._addonsPageNum = 0;
+        (this.shadowRoot.getElementById("search") as HTMLInputElement).value = "";
+        this._searchPhrase = "";
+    }
+
     _search() {
         this._addonsPageNum = 0;
-        this._selectedCategory = parseInt((this.shadowRoot.getElementById("selectCategory") as HTMLSelectElement).value);
+        this._searchPhrase = (this.shadowRoot.getElementById("search") as HTMLInputElement).value;
+        console.log(this._searchPhrase);
     }
 
     _renderHeader() {
@@ -303,10 +325,10 @@ export class WidgetElement extends LitElement {
                 : html`
                 <h1 class='centered'>Doplňky ABRA Flexi</h1>
                 <div id='searchFilters'>
-                    <label for='selectCategory'>Category</label>
-                    <select id='selectCategory' @change="${this._updateCategory}">
-                        <option value="">--All--</option>
-                        ${this._categories.map((category) => {
+                    <label for='selectCategory'>Category
+                        <select id='selectCategory' @change="${this._updateCategory}">
+                            <option value="">--All--</option>
+                            ${this._categories.map((category) => {
                     let name: string;
                     switch (this._language) {
                         case 'cz': name = category.nameCs;
@@ -320,11 +342,16 @@ export class WidgetElement extends LitElement {
                         default: throw ("Intern language incobatibility");
                     }
                     return html`
-                        <option value="${category.id}" ?selected="${category.id === this._selectedCategory}">${name}</option>
-                    `;
+                            <option value="${category.id}" ?selected="${category.id === this._selectedCategory}">${name}</option>
+                        `;
                 })}
-                    </select>
-                    <button @click="${this._search}">Search</button>
+                        </select>
+                    </label>
+                    <div>
+                        <input type="text" id="search" value="${this._searchPhrase}"/>
+                        <button @click="${this._clear}">Clear</button>
+                        <button @click="${this._search}">Search</button>
+                    </div>
                 </div>
                 `}
                 <select id="selectLanguage">
@@ -396,11 +423,11 @@ export class WidgetElement extends LitElement {
                 `
                 : html`
                 <div class="panel centered">
-                    ${this._firstPage ? `` : html`<button @click="${() => this._addonsPageNum--}"> < </button>`}
+                    ${this._addonsPageNum == 0 ? `` : html`<button @click="${() => this._addonsPageNum--}"> < </button>`}
                     <div class="centered">
-                        ${this._addonsPageNum + 1}/${this._addonsTotalPages}
+                        ${this._addonsPageNum + 1}/${this._addonsTotalPages + 1}
                     </div>
-                    ${this._lastPage ? `` : html`<button @click="${() => this._addonsPageNum++}"> > </button>`}
+                    ${this._addonsPageNum < this._addonsTotalPages ? html`<button @click="${() => this._addonsPageNum++}"> > </button>` : ""}
                 </div>
                 `
             }
