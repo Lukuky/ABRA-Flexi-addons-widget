@@ -2,6 +2,7 @@ import { LitElement, html, css } from 'lit';
 import { Task } from '@lit/task';
 import { customElement, property, state } from 'lit/decorators.js';
 import { repeat } from 'lit/directives/repeat.js';
+import './loader.ts';
 
 type WidgetState = 'overview' | 'detail';
 
@@ -150,6 +151,21 @@ export class WidgetElement extends LitElement {
             overflow-y: hidden;
         }
 
+        .loading {
+            h1, h2, h3, p {
+                filter: blur(0.5em);
+            }
+        }
+
+        .loading:hover {
+            box-shadow: none;
+            cursor: progress;
+        }
+
+        .addon addons-loader {
+            --size: 3em;
+            margin: 0.5em;
+        }
 
         .detail h2 {
             padding: 1em 0 0.5em 0;
@@ -266,6 +282,11 @@ export class WidgetElement extends LitElement {
         this._widgetState = 'detail';
     }
 
+    _updateCategory(e: Event) {
+        this._addonsPageNum = 0;
+        this._selectedCategory = parseInt((e.target as HTMLSelectElement).value);
+    }
+
     _search() {
         this._addonsPageNum = 0;
         this._selectedCategory = parseInt((this.shadowRoot.getElementById("selectCategory") as HTMLSelectElement).value);
@@ -283,7 +304,8 @@ export class WidgetElement extends LitElement {
                 <h1 class='centered'>Doplňky ABRA Flexi</h1>
                 <div id='searchFilters'>
                     <label for='selectCategory'>Category</label>
-                    <select id='selectCategory'>
+                    <select id='selectCategory' @change="${this._updateCategory}">
+                        <option value="">--All--</option>
                         ${this._categories.map((category) => {
                     let name: string;
                     switch (this._language) {
@@ -298,10 +320,9 @@ export class WidgetElement extends LitElement {
                         default: throw ("Intern language incobatibility");
                     }
                     return html`
-                        <option value="${category.id}">${name}</option>
+                        <option value="${category.id}" ?selected="${category.id === this._selectedCategory}">${name}</option>
                     `;
                 })}
-                        <option value="">--All--</option>
                     </select>
                     <button @click="${this._search}">Search</button>
                 </div>
@@ -318,7 +339,13 @@ export class WidgetElement extends LitElement {
     _renderPreview() {
         return html`
         <div id='content' class='cards'>
-            ${Array.from({ length: this.addonsPerPage }, (_, i) => html`<article class='addon'>Loading...</article>`)}
+            ${Array.from({ length: this.addonsPerPage }, (_, i) => html`
+                <article class='addon loading'>
+                    <addons-loader></addons-loader>
+                    <h2>Doplněk ABRA Flexi</h2>
+                    <p>Lorem ipsum dolor sit amet. Lorem ipsum dolor sit amet.</p>
+                </article>
+            `)}
         </div>`;
     }
 
