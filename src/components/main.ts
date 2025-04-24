@@ -206,12 +206,6 @@ export class WidgetElement extends LitElement {
     private _addonsTotalPages: number = 0;
 
     @state()
-    private _firstPage: boolean = true;
-
-    @state()
-    private _lastPage: boolean = false;
-
-    @state()
     private _widgetState: WidgetState = 'overview';
 
     @state()
@@ -263,8 +257,6 @@ export class WidgetElement extends LitElement {
 
             const data: AddonsSearch = await response.json();
             console.log(data);
-            this._firstPage = data.first;
-            this._lastPage = data.last;
             this._addonsTotalPages = data.totalPages;
             this._currentAddons = data.content;
 
@@ -424,9 +416,9 @@ export class WidgetElement extends LitElement {
                 <div class="panel centered">
                     ${this._addonsPageNum == 0 ? `` : html`<button @click="${() => this._addonsPageNum--}"> < </button>`}
                     <div class="centered">
-                        ${this._addonsPageNum + 1}/${this._addonsTotalPages + 1}
+                        ${this._addonsPageNum + 1}/${this._addonsTotalPages}
                     </div>
-                    ${this._addonsPageNum < this._addonsTotalPages ? html`<button @click="${() => this._addonsPageNum++}"> > </button>` : ""}
+                    ${this._addonsPageNum + 1 < this._addonsTotalPages ? html`<button @click="${() => this._addonsPageNum++}"> > </button>` : ""}
                 </div>
                 `
             }
