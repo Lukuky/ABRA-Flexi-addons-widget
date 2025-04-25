@@ -6,6 +6,7 @@
     "@esm-bundle/chai": "^4.3.4-fix.0",
     "@lit/task": "^1.0.2",
     "@open-wc/testing": "^3.2.2",
+    "@rollup/plugin-typescript": "^12.1.2",
     "@types/chai": "^5.2.1",
     "@types/mocha": "^10.0.10",
     "@web/dev-server-esbuild": "^1.0.4",
@@ -16,6 +17,8 @@
     "html-loader": "^5.1.0",
     "html-webpack-plugin": "^5.6.3",
     "mocha": "^11.1.0",
+    "rollup": "^4.40.0",
+    "rollup-plugin-summary": "^3.0.1",
     "style-loader": "^4.0.0",
     "to-string-loader": "^1.2.0",
     "ts-loader": "^9.5.2",
@@ -27,7 +30,8 @@
   "scripts": {
     "watch": "webpack --watch --mode development --devtool inline-source-map",
     "build": "webpack --mode production --devtool false",
-    "test": "web-test-runner --debug"
+    "test": "web-test-runner --debug",
+    "rollup": "rollup -c"
   },
   "name": "abra-flexi-addons-widget",
   "description": "Web component widget for fetching and maintaining ABRA Flexi addons.",
