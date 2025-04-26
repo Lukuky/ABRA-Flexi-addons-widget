@@ -45,7 +45,10 @@ export class WidgetElement extends LitElement {
             font-size: 0.9rem;
             --card-height: 15rem;
             --card-gap: 1rem;
-            --border-main: solid #ccc 0.2em;
+            --main-border: solid #ccc 0.2rem;
+            --main-border-radius: 0.5rem;
+            --input-border: solid #666 0.1rem;
+            --input-border-radius: 0.3rem;
         }
 
         * {
@@ -56,17 +59,23 @@ export class WidgetElement extends LitElement {
 
         button, select, input {
             font-size: 1.1rem;
-            border: var(--border-main);
+            border: var(--input-border);
+            border-radius: var(--input-border-radius);
             background-color: var(--bg-color-primary, #eee);
             max-width: 100%;
             padding: 0.2em;
+        }
+
+        label {
+            color: black;
         }
         
         #container {
             display: flex;
             flex-flow: column nowrap;
             align-items: stretch;
-            border: var(--border-main);
+            border: var(--main-border);
+            border-radius: var(--main-border-radius);
             background-color: var(--bg-color-primary, #ddd);
             padding: 0.5em;
         }
@@ -85,7 +94,6 @@ export class WidgetElement extends LitElement {
 
         header, footer {
             padding: 0.3em;
-            color: #666;
         }
 
         #buttonBack {
@@ -102,7 +110,6 @@ export class WidgetElement extends LitElement {
             overflow-y: scroll;
             border: var(--border-main);
             background-color: var(--bg-color-main, #eee);
-
         }
 
         #content.extended {
@@ -339,24 +346,28 @@ export class WidgetElement extends LitElement {
                         </select>
                     </label>
                     <div>
-                        <input type="text" id="search" value="${this._searchPhrase}"/>
+                        <label>Search
+                            <input type="text" id="search" value="${this._searchPhrase}"/>
+                        </label>
                         <button @click="${this._clear}">Clear</button>
                         <button @click="${this._search}">Search</button>
                     </div>
                 </div>
                 `}
-                <select id="selectLanguage">
-                    ${WidgetElement.languages.map((code) => html`
-                        <option value="${code}">${code}</option>
-                    `)}
-                </select>
+                <label>Language
+                    <select id="selectLanguage">
+                        ${WidgetElement.languages.map((code) => html`
+                            <option value="${code}">${code}</option>
+                        `)}
+                    </select>
+                </label>
             </header>
         `;
     }
 
     _renderPreview() {
         return html`
-        <div id='content' class='cards'>
+        <div id='content' class='cards' tabindex='0'>
             ${Array.from({ length: this.addonsPerPage }, (_, i) => html`
                 <article class='addon loading'>
                     <addons-loader></addons-loader>
@@ -384,13 +395,15 @@ export class WidgetElement extends LitElement {
 
     _renderOverview() {
         return html`
-        <div id='content' class='cards'>
+        <div id='content' class='cards' tabindex='0'>
         ${repeat(this._currentAddons, (addon) => addon.id, (addon) => html`
-                <article class='addon' @click="${() => this._goToDetail(addon)}">
+            <a class='addon' @click="${() => this._goToDetail(addon)}">
+                <article>
                     <image src='${addon.photo.toString()}'></image>
                     <h2>Název doplňku</h2>
                     ${this._retrievePerex(addon)}
                 </article>
+            </a>
             `)}
         </div>`;
     }
