@@ -393,11 +393,16 @@ export class WidgetElement extends LitElement {
         return perex;
     }
 
+    /**
+     * Rendering function for cards of widget in #content
+     * tabindex has to be present in <a> element because it has no href
+     * @returns #content with addon cards
+     */
     _renderOverview() {
         return html`
         <div id='content' class='cards' tabindex='0'>
         ${repeat(this._currentAddons, (addon) => addon.id, (addon) => html`
-            <a class='addon' @click="${() => this._goToDetail(addon)}">
+            <a class='addon' tabindex='0' @click="${() => this._goToDetail(addon)}">
                 <article>
                     <image src='${addon.photo.toString()}'></image>
                     <h2>Název doplňku</h2>

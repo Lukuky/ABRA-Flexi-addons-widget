@@ -67,7 +67,7 @@
         </div>`}_removeStyles(t){Array.from(t.getElementsByTagName("style")).forEach((t=>{var e;return null===(e=t.parentNode)||void 0===e?void 0:e.removeChild(t)})),Array.from(t.getElementsByTagName("*")).forEach((t=>{t.removeAttribute("style"),t.removeAttribute("color")}))}_retrievePerex(t){const e=document.createElement("p");return e.innerHTML=t.perex,this._removeStyles(e),e}_renderOverview(){return F`
         <div id='content' class='cards' tabindex='0'>
         ${xt(this._currentAddons,(t=>t.id),(t=>F`
-            <a class='addon' @click="${()=>this._goToDetail(t)}">
+            <a class='addon' tabindex='0' @click="${()=>this._goToDetail(t)}">
                 <article>
                     <image src='${t.photo.toString()}'></image>
                     <h2>Název doplňku</h2>
