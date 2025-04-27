@@ -1,9 +1,11 @@
 {
   "dependencies": {
+    "@lit/localize": "^0.12.2",
     "lit": "^3.3.0"
   },
   "devDependencies": {
     "@esm-bundle/chai": "^4.3.4-fix.0",
+    "@lit/localize-tools": "^0.8.0",
     "@lit/task": "^1.0.2",
     "@open-wc/testing": "^3.2.2",
     "@rollup/plugin-typescript": "^12.1.2",
@@ -31,7 +33,9 @@
     "watch": "webpack --watch --mode development --devtool inline-source-map",
     "build": "webpack --mode production --devtool false",
     "test": "web-test-runner --debug",
-    "rollup": "rollup -c"
+    "rollup": "rollup -c",
+    "localize": "lit-localize extract",
+    "localize-build": "lit-localize build"
   },
   "name": "abra-flexi-addons-widget",
   "description": "Web component widget for fetching and maintaining ABRA Flexi addons.",

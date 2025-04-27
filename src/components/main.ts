@@ -2,7 +2,24 @@ import { LitElement, html, css } from 'lit';
 import { Task } from '@lit/task';
 import { customElement, property, state } from 'lit/decorators.js';
 import { repeat } from 'lit/directives/repeat.js';
+import { msg, localized } from '@lit/localize';
 import './loader.ts';
+
+import { configureLocalization } from '@lit/localize';
+
+import { sourceLocale, targetLocales, allLocales } from '../generated/locale-codes.js';
+
+
+const localizedTemplates = new Map(
+    targetLocales.map((locale) => [locale, import(`../generated/locales/${locale}.js`)])
+
+);
+
+const { getLocale, setLocale } = configureLocalization({
+    sourceLocale,
+    targetLocales,
+    loadLocale: async (locale: "de" | "en" | "sk") => localizedTemplates.get(locale),
+});
 
 type WidgetState = 'overview' | 'detail';
 
@@ -37,6 +54,7 @@ interface AddonsSearch {
 
 };
 
+@localized()
 @customElement('addons-widget')
 export class WidgetElement extends LitElement {
     static styles = css`
@@ -312,6 +330,15 @@ export class WidgetElement extends LitElement {
         console.log(this._searchPhrase);
     }
 
+    _localeChanged(event: Event) {
+        const newLocale = (event.target as HTMLSelectElement).value;
+        const url = new URL(window.location.href);
+        if (url.searchParams.get('locale') !== newLocale) {
+            url.searchParams.set('locale', newLocale);
+            window.location.assign(url.href);
+        }
+    }
+
     _renderHeader() {
         return html`
             <header class="panel">
@@ -321,7 +348,7 @@ export class WidgetElement extends LitElement {
                 <h1 class='centered'>Název doplňku</h1>
                 `
                 : html`
-                <h1 class='centered'>Doplňky ABRA Flexi</h1>
+                <h1 class='centered'>${msg('Doplňky ABRA Flexi', { id: 'title' })}</h1>
                 <div id='searchFilters'>
                     <label for='selectCategory'>Category
                         <select id='selectCategory' @change="${this._updateCategory}">
@@ -355,10 +382,12 @@ export class WidgetElement extends LitElement {
                 </div>
                 `}
                 <label>Language
-                    <select id="selectLanguage">
-                        ${WidgetElement.languages.map((code) => html`
-                            <option value="${code}">${code}</option>
-                        `)}
+                    <select @change=${this._localeChanged}>
+                        ${allLocales.map((locale) => html`
+                            <option .value=${locale} ?selected=${locale === getLocale()}>
+                                ${locale}
+                            </option>`
+                )}
                     </select>
                 </label>
             </header>
