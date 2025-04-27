@@ -1,0 +1,40 @@
+name: Sync GitHub Wiki
+
+on:
+  push:
+    branches: develop
+
+jobs:
+  sync-github-wiki:
+    permissions:
+      contents: write
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Setup Node.js
+        uses: actions/setup-node@main
+        with:
+          node-version-file: ".nvmrc"
+
+      - name: Cache Dependencies
+        id: cache
+        uses: actions/cache@main
+        with:
+          key: ${{ hashFiles('package-lock.json') }}
+          path: "node_modules"
+
+      - name: Install Dependencies
+        if: steps.cache.outputs.cache-hit != 'true'
+        run: npm ci
+
+      - name: Build Documentation
+        run: npm run docs
+
+      - name: Sync GitHub Wiki
+        uses: spenserblack/actions-wiki@main
+        with:
+          path: wiki

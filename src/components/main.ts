@@ -54,6 +54,9 @@ interface AddonsSearch {
 
 };
 
+/**
+ * Main addons widget Lit web component
+ */
 @localized()
 @customElement('addons-widget')
 export class WidgetElement extends LitElement {
