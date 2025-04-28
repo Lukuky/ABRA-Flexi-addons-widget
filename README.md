@@ -16,7 +16,7 @@ There is always production version in the `/dist` directory.
 Options of running:
 - Open `index.html` in root file to launch the widget itself.
 - Open `index.html` in `/demo` directory to run the widget in demo website.
-- Copy and use the `addons-widget.js` file in your HTML and use `<addons-widget>` element.
+- Copy and use the `addons-widget.js` files in your HTML and use `<addons-widget>` element.
 
 ## Developing
 
@@ -29,7 +29,7 @@ npm run watch
 
 Compiling and bundling source code into the `/dist` directory in production mode with minification and licencing Lit element.
 ```bash
-npm run build
+npm run build:all
 ```
 
 Always build before pushing.
