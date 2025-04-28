@@ -4,6 +4,39 @@
 <body>
 <trans-unit id="title">
   <source>Doplňky ABRA Flexi</source>
+  <target>Doplnky ABRA Flexi</target>
+</trans-unit>
+<trans-unit id="install">
+  <source>Instalovat</source>
+  <target>Inštalovať</target>
+</trans-unit>
+<trans-unit id="buttonBack">
+  <source>Zpět</source>
+  <target>Späť</target>
+</trans-unit>
+<trans-unit id="labelCategory">
+  <source>Kategorie</source>
+  <target>Kategória</target>
+</trans-unit>
+<trans-unit id="optionAll">
+  <source>Všechny</source>
+  <target>Všetko</target>
+</trans-unit>
+<trans-unit id="labelSearch">
+  <source>Vyhledat</source>
+  <target>Hľadanie</target>
+</trans-unit>
+<trans-unit id="buttonResetSearch">
+  <source>Reset</source>
+  <target>Reset</target>
+</trans-unit>
+<trans-unit id="buttonSearch">
+  <source>Vyhledat</source>
+  <target>Hľadanie</target>
+</trans-unit>
+<trans-unit id="labelLanguage">
+  <source>Jazyk</source>
+  <target>Jazyk</target>
 </trans-unit>
 </body>
 </file>

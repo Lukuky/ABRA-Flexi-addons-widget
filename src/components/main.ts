@@ -72,7 +72,6 @@ interface Addon {
 interface AddonsSearch {
     totalPages: number,
     content: Addon[]
-
 };
 
 /**
@@ -147,7 +146,7 @@ export class WidgetElement extends LitElement {
             justify-self: left;
         }
 
-        #selectLanguage {
+        #selectLocale {
             justify-self: end;
         }
 
@@ -293,6 +292,12 @@ export class WidgetElement extends LitElement {
     private _searchPhrase: string = "";
 
     /**
+     * Selected locale modifying messages and switching among fetched data
+     */
+    @state()
+    private _selectedLocale: string = getLocale();
+
+    /**
      * Maximum amount of addons on one page of overview
      */
     @property({ type: Number })
@@ -300,12 +305,33 @@ export class WidgetElement extends LitElement {
 
     // ---------------------- LIT TASKS ---------------------- //
     /**
+     * Task to setup locales
+     */
+    private _TaskLocales = new Task(this, {
+
+        task: async ([selectedLocale]) => {
+            if (selectedLocale !== getLocale()) {
+                allLocales.forEach(async locale => {
+                    if (selectedLocale === locale) {
+                        await setLocale(selectedLocale);
+                        this.requestUpdate();
+                        return;
+                    }
+                });
+            }
+        },
+
+        args: () => [this._selectedLocale]
+
+    });
+
+    /**
      * Task fetching all addons categories from Flexibee API to component's state
      */
     private _TaskCategories = new Task(this, {
 
         task: async ([], { signal }) => {
-            let url = new URL('https://support.flexibee.eu/api/categories');
+            const url = new URL('https://support.flexibee.eu/api/categories');
             const request = new Request(url);
             const response = await fetch(request, { signal });
 
@@ -314,9 +340,10 @@ export class WidgetElement extends LitElement {
             const data: Category[] = await response.json();
             console.log(data);
             return data;
+
         },
 
-        args: () => [this._addonsPageNum, this.addonsPerPage]
+        args: () => []
 
     });
 
@@ -326,9 +353,9 @@ export class WidgetElement extends LitElement {
      */
     private _addons = new Task(this, {
 
-        task: async ([category, page, size, search], { signal }) => {
+        task: async ([langOpt, category, page, size, search], { signal }) => {
             let url = new URL('https://support.flexibee.eu/api/addons/search');
-            // url.searchParams.append('langOpt', `\'${langOpt}\'`);
+            url.searchParams.append('langOpt', langOpt);
             if (category) url.searchParams.append('categoryId', category.toString());
             url.searchParams.append('page', page.toString());
             url.searchParams.append('size', size.toString());
@@ -346,7 +373,7 @@ export class WidgetElement extends LitElement {
             return data;
         },
 
-        args: () => [this._selectedCategory, this._addonsPageNum, this.addonsPerPage, this._searchPhrase]
+        args: () => [this._selectedLocale, this._selectedCategory, this._addonsPageNum, this.addonsPerPage, this._searchPhrase]
 
     });
 
@@ -358,7 +385,6 @@ export class WidgetElement extends LitElement {
     constructor() {
         super();
         this._TaskCategories.run();
-
         this._TaskCategories.taskComplete.then((categories) => {
             this._categories = categories || [];
         }).catch((error) => {
@@ -398,7 +424,7 @@ export class WidgetElement extends LitElement {
     /**
      * Reset page number to zero and setting search phrase to empty string
      */
-    _clear() {
+    _resetSearch() {
         this._addonsPageNum = 0;
         (this.shadowRoot.getElementById("search") as HTMLInputElement).value = "";
         this._searchPhrase = "";
@@ -444,11 +470,22 @@ export class WidgetElement extends LitElement {
      * @param event Event to target select element with locale codes
      */
     _localeChanged(event: Event) {
-        const newLocale = (event.target as HTMLSelectElement).value;
-        const url = new URL(window.location.href);
-        if (url.searchParams.get('locale') !== newLocale) {
-            url.searchParams.set('locale', newLocale);
-            window.location.assign(url.href);
+        this._selectedLocale = (event.target as HTMLSelectElement).value;
+        // this._TaskLocales.run();
+    }
+
+    _localeCategoryName(category: Category) {
+        switch (this._selectedLocale) {
+            case 'cs': return category.nameCs;
+            case 'sk': return category.nameSk;
+            case 'en': return category.nameEn;
+            case 'de': return category.nameDe;
+            default: return category.nameCs;
+        }
+    }
+    _searchOnEnter(e: Event) {
+        if ((e as KeyboardEvent).key === "Enter") {
+            this._search();
         }
     }
 
@@ -462,47 +499,35 @@ export class WidgetElement extends LitElement {
             <header class="panel">
                 ${this._widgetState == 'detail'
                 ? html`
-                <button id="buttonBack" @click="${this._goBack}">Back</button>
+                <button id="buttonBack" @click="${this._goBack}">${msg("Zpět", { id: "buttonBack" })}</button>
                 <h1 class='centered'>Název doplňku</h1>
                 `
                 : html`
                 <h1 class='centered'>${msg('Doplňky ABRA Flexi', { id: 'title' })}</h1>
                 <div id='searchFilters'>
-                    <label for='selectCategory'>Category
+                    <label for='selectCategory'>${msg("Kategorie", { id: "labelCategory" })}
                         <select id='selectCategory' @change="${this._updateCategory}">
-                            <option value="">--All--</option>
-                            ${this._categories.map((category) => {
-                    let name: string;
-                    switch (getLocale.toString()) {
-                        case 'cs': name = category.nameCs;
-                            break;
-                        case 'sk': name = category.nameSk;
-                            break;
-                        case 'en': name = category.nameEn;
-                            break;
-                        case 'de': name = category.nameDe;
-                            break;
-                        default: throw ("Intern language incobatibility");
-                    }
+                            <option value="">--${msg("Všechny", { id: "optionAll" })}--</option>
+                    ${this._categories.map((category) => {
                     return html`
-                            <option value="${category.id}" ?selected="${category.id === this._selectedCategory}">${name}</option>
-                        `;
+                        <option value="${category.id}" ?selected="${category.id === this._selectedCategory}">${this._localeCategoryName(category)}</option>
+                    `;
                 })}
                         </select>
                     </label>
                     <div>
-                        <label>Search
-                            <input type="text" id="search" value="${this._searchPhrase}"/>
+                        <label>${msg("Vyhledat", { id: "labelSearch" })}
+                            <input type="text" id="search" value="${this._searchPhrase}" @keydown="${this._searchOnEnter}"/>
                         </label>
-                        <button @click="${this._clear}">Clear</button>
-                        <button @click="${this._search}">Search</button>
+                        <button @click="${this._resetSearch}">${msg("Reset", { id: "buttonResetSearch" })}</button>
+                        <button @click="${this._search}">${msg("Vyhledat", { id: "buttonSearch" })}</button>
                     </div>
                 </div>
                 `}
-                <label>Language
+                <label id="selectLocale">${msg("Jazyk", { id: "labelLanguage" })}
                     <select @change=${this._localeChanged}>
                         ${allLocales.map((locale) => html`
-                            <option .value=${locale} ?selected=${locale === getLocale()}>
+                            <option .value=${locale} ?selected=${locale === this._selectedLocale}>
                                 ${locale}
                             </option>`
                 )}
@@ -573,7 +598,7 @@ export class WidgetElement extends LitElement {
                 ${this._widgetState == 'detail'
                 // <image src='${this._selectedAddon.photo.toString()}'></image>
                 ? html`
-                <button class="centered" @click="${() => { }}">Instalovat</button>
+                <button class="centered" @click="${() => { }}">${msg('Instalovat', { id: 'install' })}</button>
                 `
                 : html`
                 <div class="panel centered">

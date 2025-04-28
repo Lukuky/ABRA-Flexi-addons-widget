@@ -2,6 +2,7 @@ import { css, LitElement, html } from 'lit';
 import { Task } from '@lit/task';
 import { property, customElement, state } from 'lit/decorators.js';
 import { repeat } from 'lit/directives/repeat.js';
+import { configureLocalization, localized, msg } from '@lit/localize';
 
 /******************************************************************************
 Copyright (c) Microsoft Corporation.
@@ -41,6 +42,19 @@ typeof SuppressedError === "function" ? SuppressedError : function (error, suppr
     var e = new Error(message);
     return e.name = "SuppressedError", e.error = error, e.suppressed = suppressed, e;
 };
+
+const sourceLocale = `cs`;
+const targetLocales = [
+    `de`,
+    `en`,
+    `sk`,
+];
+const allLocales = [
+    `cs`,
+    `de`,
+    `en`,
+    `sk`,
+];
 
 let LoaderElement = class LoaderElement extends LitElement {
     constructor() {
@@ -82,8 +96,13 @@ LoaderElement = __decorate([
     customElement('addons-loader')
 ], LoaderElement);
 
-var WidgetElement_1;
-let WidgetElement = WidgetElement_1 = class WidgetElement extends LitElement {
+const localizedTemplates = new Map(targetLocales.map((locale) => [locale, import(`../generated/locales/${locale}.js`)]));
+const { getLocale, setLocale } = configureLocalization({
+    sourceLocale,
+    targetLocales,
+    loadLocale: (locale) => __awaiter(void 0, void 0, void 0, function* () { return localizedTemplates.get(locale); }),
+});
+let WidgetElement = class WidgetElement extends LitElement {
     constructor() {
         super();
         this._categories = [];
@@ -92,7 +111,6 @@ let WidgetElement = WidgetElement_1 = class WidgetElement extends LitElement {
         this._addonsTotalPages = 0;
         this._widgetState = 'overview';
         this._selectedAddon = null;
-        this._language = WidgetElement_1.languages[0];
         this._selectedCategory = null;
         this._searchPhrase = "";
         this.addonsPerPage = 8;
@@ -111,7 +129,7 @@ let WidgetElement = WidgetElement_1 = class WidgetElement extends LitElement {
             args: () => [this._addonsPageNum, this.addonsPerPage]
         });
         this._addons = new Task(this, {
-            task: (_a, _b) => __awaiter(this, [_a, _b], void 0, function* ([langOpt, category, page, size, search], { signal }) {
+            task: (_a, _b) => __awaiter(this, [_a, _b], void 0, function* ([category, page, size, search], { signal }) {
                 let url = new URL('https://support.flexibee.eu/api/addons/search');
                 if (category)
                     url.searchParams.append('categoryId', category.toString());
@@ -130,7 +148,7 @@ let WidgetElement = WidgetElement_1 = class WidgetElement extends LitElement {
                 this._currentAddons = data.content;
                 return data;
             }),
-            args: () => [this._language, this._selectedCategory, this._addonsPageNum, this.addonsPerPage, this._searchPhrase]
+            args: () => [this._selectedCategory, this._addonsPageNum, this.addonsPerPage, this._searchPhrase]
         });
         this._TaskCategories.run();
         this._TaskCategories.taskComplete.then((categories) => {
@@ -159,71 +177,6 @@ let WidgetElement = WidgetElement_1 = class WidgetElement extends LitElement {
     _search() {
         this._addonsPageNum = 0;
         this._searchPhrase = this.shadowRoot.getElementById("search").value;
-        console.log(this._searchPhrase);
-    }
-    _renderHeader() {
-        return html `
-            <header class="panel">
-                ${this._widgetState == 'detail'
-            ? html `
-                <button id="buttonBack" @click="${this._goBack}">Back</button>
-                <h1 class='centered'>Název doplňku</h1>
-                `
-            : html `
-                <h1 class='centered'>Doplňky ABRA Flexi</h1>
-                <div id='searchFilters'>
-                    <label for='selectCategory'>Category
-                        <select id='selectCategory' @change="${this._updateCategory}">
-                            <option value="">--All--</option>
-                            ${this._categories.map((category) => {
-                let name;
-                switch (this._language) {
-                    case 'cz':
-                        name = category.nameCs;
-                        break;
-                    case 'sk':
-                        name = category.nameSk;
-                        break;
-                    case 'en':
-                        name = category.nameEn;
-                        break;
-                    case 'de':
-                        name = category.nameDe;
-                        break;
-                    default: throw ("Intern language incobatibility");
-                }
-                return html `
-                            <option value="${category.id}" ?selected="${category.id === this._selectedCategory}">${name}</option>
-                        `;
-            })}
-                        </select>
-                    </label>
-                    <div>
-                        <input type="text" id="search" value="${this._searchPhrase}"/>
-                        <button @click="${this._clear}">Clear</button>
-                        <button @click="${this._search}">Search</button>
-                    </div>
-                </div>
-                `}
-                <select id="selectLanguage">
-                    ${WidgetElement_1.languages.map((code) => html `
-                        <option value="${code}">${code}</option>
-                    `)}
-                </select>
-            </header>
-        `;
-    }
-    _renderPreview() {
-        return html `
-        <div id='content' class='cards'>
-            ${Array.from({ length: this.addonsPerPage }, (_, i) => html `
-                <article class='addon loading'>
-                    <addons-loader></addons-loader>
-                    <h2>Doplněk ABRA Flexi</h2>
-                    <p>Lorem ipsum dolor sit amet. Lorem ipsum dolor sit amet.</p>
-                </article>
-            `)}
-        </div>`;
     }
     _removeStyles(element) {
         Array.from(element.getElementsByTagName('style')).forEach(style => { var _a; return (_a = style.parentNode) === null || _a === void 0 ? void 0 : _a.removeChild(style); });
@@ -238,15 +191,95 @@ let WidgetElement = WidgetElement_1 = class WidgetElement extends LitElement {
         this._removeStyles(perex);
         return perex;
     }
+    _localeChanged(event) {
+        const newLocale = event.target.value;
+        const url = new URL(window.location.href);
+        if (url.searchParams.get('locale') !== newLocale) {
+            url.searchParams.set('locale', newLocale);
+            window.location.assign(url.href);
+        }
+    }
+    _renderHeader() {
+        return html `
+            <header class="panel">
+                ${this._widgetState == 'detail'
+            ? html `
+                <button id="buttonBack" @click="${this._goBack}">Back</button>
+                <h1 class='centered'>Název doplňku</h1>
+                `
+            : html `
+                <h1 class='centered'>${msg('Doplňky ABRA Flexi', { id: 'title' })}</h1>
+                <div id='searchFilters'>
+                    <label for='selectCategory'>Category
+                        <select id='selectCategory' @change="${this._updateCategory}">
+                            <option value="">--All--</option>
+                            ${this._categories.map((category) => {
+                let name;
+                console.log();
+                switch (getLocale.toString()) {
+                    case 'cs':
+                        name = category.nameCs;
+                        break;
+                    case 'sk':
+                        name = category.nameSk;
+                        break;
+                    case 'en':
+                        name = category.nameEn;
+                        break;
+                    case 'de':
+                        name = category.nameDe;
+                        break;
+                    default: name = category.nameCs;
+                }
+                return html `
+                            <option value="${category.id}" ?selected="${category.id === this._selectedCategory}">${name}</option>
+                        `;
+            })}
+                        </select>
+                    </label>
+                    <div>
+                        <label>Search
+                            <input type="text" id="search" value="${this._searchPhrase}"/>
+                        </label>
+                        <button @click="${this._clear}">Clear</button>
+                        <button @click="${this._search}">Search</button>
+                    </div>
+                </div>
+                `}
+                <label>Language
+                    <select @change=${this._localeChanged}>
+                        ${allLocales.map((locale) => html `
+                            <option .value=${locale} ?selected=${locale === getLocale()}>
+                                ${locale}
+                            </option>`)}
+                    </select>
+                </label>
+            </header>
+        `;
+    }
+    _renderPreview() {
+        return html `
+        <div id='content' class='cards' tabindex='0'>
+            ${Array.from({ length: this.addonsPerPage }, (_, i) => html `
+                <article class='addon loading'>
+                    <addons-loader></addons-loader>
+                    <h2>Doplněk ABRA Flexi</h2>
+                    <p>Lorem ipsum dolor sit amet. Lorem ipsum dolor sit amet.</p>
+                </article>
+            `)}
+        </div>`;
+    }
     _renderOverview() {
         return html `
-        <div id='content' class='cards'>
+        <div id='content' class='cards' tabindex='0'>
         ${repeat(this._currentAddons, (addon) => addon.id, (addon) => html `
-                <article class='addon' @click="${() => this._goToDetail(addon)}">
+            <a class='addon' tabindex='0' @click="${() => this._goToDetail(addon)}">
+                <article>
                     <image src='${addon.photo.toString()}'></image>
                     <h2>Název doplňku</h2>
                     ${this._retrievePerex(addon)}
                 </article>
+            </a>
             `)}
         </div>`;
     }
@@ -299,28 +332,36 @@ WidgetElement.styles = css `
             font-size: 0.9rem;
             --card-height: 15rem;
             --card-gap: 1rem;
-            --border-main: solid #ccc 0.2em;
+            --main-border: solid #ccc 0.2rem;
+            --main-border-radius: 0.5rem;
+            --input-border: solid #666 0.1rem;
+            --input-border-radius: 0.3rem;
         }
 
         * {
-            /* border: solid black 0.01em; */
             padding: 0;
             margin: 0;
         }
 
         button, select, input {
             font-size: 1.1rem;
-            border: var(--border-main);
+            border: var(--input-border);
+            border-radius: var(--input-border-radius);
             background-color: var(--bg-color-primary, #eee);
             max-width: 100%;
             padding: 0.2em;
+        }
+
+        label {
+            color: black;
         }
         
         #container {
             display: flex;
             flex-flow: column nowrap;
             align-items: stretch;
-            border: var(--border-main);
+            border: var(--main-border);
+            border-radius: var(--main-border-radius);
             background-color: var(--bg-color-primary, #ddd);
             padding: 0.5em;
         }
@@ -339,7 +380,6 @@ WidgetElement.styles = css `
 
         header, footer {
             padding: 0.3em;
-            color: #666;
         }
 
         #buttonBack {
@@ -356,7 +396,6 @@ WidgetElement.styles = css `
             overflow-y: scroll;
             border: var(--border-main);
             background-color: var(--bg-color-main, #eee);
-
         }
 
         #content.extended {
@@ -373,11 +412,6 @@ WidgetElement.styles = css `
             justify-content: space-between;
             gap: 1em;
         }
-
-        /* #searchFilters label {
-            position: absolute;
-            top: -1em;
-        } */
 
         .cards {
             display: flex;
@@ -444,7 +478,6 @@ WidgetElement.styles = css `
             margin: 0.5em;
         }
     `;
-WidgetElement.languages = ['cz', 'sk', 'en', 'de'];
 __decorate([
     state()
 ], WidgetElement.prototype, "_categories", void 0);
@@ -465,9 +498,6 @@ __decorate([
 ], WidgetElement.prototype, "_selectedAddon", void 0);
 __decorate([
     state()
-], WidgetElement.prototype, "_language", void 0);
-__decorate([
-    state()
 ], WidgetElement.prototype, "_selectedCategory", void 0);
 __decorate([
     state()
@@ -475,6 +505,7 @@ __decorate([
 __decorate([
     property({ type: Number })
 ], WidgetElement.prototype, "addonsPerPage", void 0);
-WidgetElement = WidgetElement_1 = __decorate([
+WidgetElement = __decorate([
+    localized(),
     customElement('addons-widget')
 ], WidgetElement);

@@ -6,6 +6,38 @@
   <source>Doplňky ABRA Flexi</source>
   <target>ABRA Flexi addons</target>
 </trans-unit>
+<trans-unit id="install">
+  <source>Instalovat</source>
+  <target>Install</target>
+</trans-unit>
+<trans-unit id="buttonBack">
+  <source>Zpět</source>
+  <target>Back</target>
+</trans-unit>
+<trans-unit id="labelCategory">
+  <source>Kategorie</source>
+  <target>Category</target>
+</trans-unit>
+<trans-unit id="optionAll">
+  <source>Všechny</source>
+  <target>All</target>
+</trans-unit>
+<trans-unit id="labelSearch">
+  <source>Vyhledat</source>
+  <target>Search</target>
+</trans-unit>
+<trans-unit id="buttonResetSearch">
+  <source>Reset</source>
+  <target>Reset</target>
+</trans-unit>
+<trans-unit id="buttonSearch">
+  <source>Vyhledat</source>
+  <target>Search</target>
+</trans-unit>
+<trans-unit id="labelLanguage">
+  <source>Jazyk</source>
+  <target>Language</target>
+</trans-unit>
 </body>
 </file>
 </xliff>

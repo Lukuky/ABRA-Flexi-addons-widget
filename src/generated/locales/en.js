@@ -9,6 +9,14 @@
     /* eslint-disable @typescript-eslint/no-explicit-any */
 
     export const templates = {
-      'title': `ABRA Flexi addons`,
+      'buttonBack': `Back`,
+'buttonResetSearch': `Reset`,
+'buttonSearch': `Search`,
+'install': `Install`,
+'labelCategory': `Category`,
+'labelLanguage': `Language`,
+'labelSearch': `Search`,
+'optionAll': `All`,
+'title': `ABRA Flexi addons`,
     };
   

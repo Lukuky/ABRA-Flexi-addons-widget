@@ -9,6 +9,14 @@
     /* eslint-disable @typescript-eslint/no-explicit-any */
 
     export const templates = {
-      'title': `Doplňky ABRA Flexi`,
+      'buttonBack': `Späť`,
+'buttonResetSearch': `Reset`,
+'buttonSearch': `Hľadanie`,
+'install': `Inštalovať`,
+'labelCategory': `Kategória`,
+'labelLanguage': `Jazyk`,
+'labelSearch': `Hľadanie`,
+'optionAll': `Všetko`,
+'title': `Doplnky ABRA Flexi`,
     };
   

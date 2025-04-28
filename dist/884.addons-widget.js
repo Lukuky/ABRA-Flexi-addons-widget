@@ -1,0 +1,1 @@
+"use strict";(self.webpackChunkabra_flexi_addons_widget=self.webpackChunkabra_flexi_addons_widget||[]).push([[884],{884:(e,a,t)=>{t.r(a),t.d(a,{templates:()=>l});const l={buttonBack:"Back",buttonResetSearch:"Reset",buttonSearch:"Search",install:"Install",labelCategory:"Category",labelLanguage:"Language",labelSearch:"Search",optionAll:"All",title:"ABRA Flexi addons"}}}]);

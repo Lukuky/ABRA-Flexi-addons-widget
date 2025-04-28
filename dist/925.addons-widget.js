@@ -1,0 +1,1 @@
+"use strict";(self.webpackChunkabra_flexi_addons_widget=self.webpackChunkabra_flexi_addons_widget||[]).push([[925],{925:(a,e,t)=>{t.r(e),t.d(e,{templates:()=>l});const l={buttonBack:"Späť",buttonResetSearch:"Reset",buttonSearch:"Hľadanie",install:"Inštalovať",labelCategory:"Kategória",labelLanguage:"Jazyk",labelSearch:"Hľadanie",optionAll:"Všetko",title:"Doplnky ABRA Flexi"}}}]);
