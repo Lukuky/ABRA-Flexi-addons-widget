@@ -3,35 +3,54 @@ import { Task } from '@lit/task';
 import { customElement, property, state } from 'lit/decorators.js';
 import { repeat } from 'lit/directives/repeat.js';
 import { msg, localized } from '@lit/localize';
+import { configureLocalization } from '@lit/localize';
+import { sourceLocale, targetLocales, allLocales } from '../generated/locale-codes.js';
 import './loader.ts';
 
-import { configureLocalization } from '@lit/localize';
-
-import { sourceLocale, targetLocales, allLocales } from '../generated/locale-codes.js';
-
-
+/**
+ * Pre-rendering localizations
+ * Specified in locale-codes.js generated from lit-localize.json
+ */
 const localizedTemplates = new Map(
     targetLocales.map((locale) => [locale, import(`../generated/locales/${locale}.js`)])
 
 );
 
+/**
+ * Configure localization
+ * Locales from localizedTemplates
+ */
 const { getLocale, setLocale } = configureLocalization({
     sourceLocale,
     targetLocales,
     loadLocale: async (locale: "de" | "en" | "sk") => localizedTemplates.get(locale),
 });
 
+/**
+ * Two only possible states of the widget
+ * overview ~ of all/filtered addons, paginated
+ * detail ~ focus on one addon with more informations
+ */
 type WidgetState = 'overview' | 'detail';
 
+/**
+ * Categories of addons
+ * keys from Flexibee API response
+ */
 interface Category {
     id: number,
     nameCs: string,
     nameSk: string,
     nameEn: string,
     nameDe: string,
-    active: true
+    active: boolean
 }
 
+/**
+ * Addons informations
+ * keys from Flexibee API
+ * include only used keys, not all from API response
+ */
 interface Addon {
     active: boolean,
     api: boolean,
@@ -46,9 +65,11 @@ interface Addon {
     photo: URL
 }
 
+/**
+ * Addons response structure from Flexibee API
+ * include only used informations
+ */
 interface AddonsSearch {
-    first: boolean,
-    last: boolean,
     totalPages: number,
     content: Addon[]
 
@@ -60,6 +81,12 @@ interface AddonsSearch {
 @localized()
 @customElement('addons-widget')
 export class WidgetElement extends LitElement {
+    // ---------------------- STYLES ---------------------- //
+    /**
+     * All styles applied to widget component
+     * Changes only able with rewriting styles for addons-widget selector
+     * or by specifying undefined CSS variables rewriting default values
+     */
     static styles = css`
         :host {
             font-family: var(--font-family, Arial, sans-serif);
@@ -73,7 +100,6 @@ export class WidgetElement extends LitElement {
         }
 
         * {
-            /* border: solid black 0.01em; */
             padding: 0;
             margin: 0;
         }
@@ -148,11 +174,6 @@ export class WidgetElement extends LitElement {
             gap: 1em;
         }
 
-        /* #searchFilters label {
-            position: absolute;
-            top: -1em;
-        } */
-
         .cards {
             display: flex;
             flex-flow: row wrap;
@@ -219,38 +240,68 @@ export class WidgetElement extends LitElement {
         }
     `;
 
-    static languages = ['cz', 'sk', 'en', 'de'];
-
+    // ---------------------- STATES ---------------------- //
+    /**
+     * All categories of addons
+     * to be fetched from Flexibee API
+     */
     @state()
     private _categories: Category[] = [];
 
+    /**
+     * Addons in current page in overview
+     */
     @state()
     private _currentAddons: Addon[] = [];
 
+    /**
+     * Number of current page of addons overview
+     * Nulled each time the filter parameters are changed
+     */
     @state()
     private _addonsPageNum: number = 0;
 
+    /**
+     * Total number of pages for currently filtered addons
+     */
     @state()
     private _addonsTotalPages: number = 0;
 
+    /**
+     * State of the widget
+     * overview (default) or detail
+     */
     @state()
     private _widgetState: WidgetState = 'overview';
 
+    /**
+     * Selected addon that is exposed in detail state
+     */
     @state()
     private _selectedAddon: Addon | null = null;
 
-    @state()
-    private _language: string = WidgetElement.languages[0];
-
+    /**
+     * Filtering addons category in overview
+     */
     @state()
     private _selectedCategory: number | null = null;
 
+    /**
+     * Phrase in text input to be full-text searched among addons
+     */
     @state()
     private _searchPhrase: string = "";
 
+    /**
+     * Maximum amount of addons on one page of overview
+     */
     @property({ type: Number })
     addonsPerPage = 8;
 
+    // ---------------------- LIT TASKS ---------------------- //
+    /**
+     * Task fetching all addons categories from Flexibee API to component's state
+     */
     private _TaskCategories = new Task(this, {
 
         task: async ([], { signal }) => {
@@ -269,9 +320,13 @@ export class WidgetElement extends LitElement {
 
     });
 
+    /**
+     * Task fetching amount of addons from Flexibee API
+     * Run each time on attributes change, so whenever filter or page changes
+     */
     private _addons = new Task(this, {
 
-        task: async ([langOpt, category, page, size, search], { signal }) => {
+        task: async ([category, page, size, search], { signal }) => {
             let url = new URL('https://support.flexibee.eu/api/addons/search');
             // url.searchParams.append('langOpt', `\'${langOpt}\'`);
             if (category) url.searchParams.append('categoryId', category.toString());
@@ -291,10 +346,15 @@ export class WidgetElement extends LitElement {
             return data;
         },
 
-        args: () => [this._language, this._selectedCategory, this._addonsPageNum, this.addonsPerPage, this._searchPhrase]
+        args: () => [this._selectedCategory, this._addonsPageNum, this.addonsPerPage, this._searchPhrase]
 
     });
 
+
+    // ---------------------- CONSTRUCTOR ---------------------- //
+    /**
+     * Initialise component and fetch addons categories for filtering
+     */
     constructor() {
         super();
         this._TaskCategories.run();
@@ -307,32 +367,82 @@ export class WidgetElement extends LitElement {
         });
     }
 
+
+    // ---------------------- STATES CHANGING ---------------------- //
+    /**
+     * Change state (from detail) to overview
+     */
     _goBack() {
         this._widgetState = 'overview';
     }
 
+    /**
+     * Change state to detail and set addon to be shown
+     * @param addon Addon to be shown in detail
+     */
     _goToDetail(addon: Addon) {
         this._selectedAddon = addon;
         this._widgetState = 'detail';
     }
 
+    /**
+     * Update category on categories select element change
+     * Nulling the page number
+     * @param e Event for targeting select for the value
+     */
     _updateCategory(e: Event) {
         this._addonsPageNum = 0;
         this._selectedCategory = parseInt((e.target as HTMLSelectElement).value);
     }
 
+    /**
+     * Reset page number to zero and setting search phrase to empty string
+     */
     _clear() {
         this._addonsPageNum = 0;
         (this.shadowRoot.getElementById("search") as HTMLInputElement).value = "";
         this._searchPhrase = "";
     }
 
+    /**
+     * Set searchPhrase from text input (and cause fetching new addons)
+     * Nulling the page number
+     */
     _search() {
         this._addonsPageNum = 0;
         this._searchPhrase = (this.shadowRoot.getElementById("search") as HTMLInputElement).value;
-        console.log(this._searchPhrase);
     }
 
+    // ---------------------- SUPP FUNCTIONS ---------------------- //
+    /**
+     * Remove all style elements and attributes from element subtree including color attribute
+     * Used for unify descriptions and perexes from Flexibee API
+     * @param element root of DOM subtree to have removed styles
+     */
+    _removeStyles(element: HTMLElement): void {
+        Array.from(element.getElementsByTagName('style')).forEach(style => style.parentNode?.removeChild(style));
+        Array.from(element.getElementsByTagName('*')).forEach(element => {
+            element.removeAttribute("style");
+            element.removeAttribute("color");
+        });
+    }
+
+    /**
+     * Getting perex out of addon fetched from Flexibee API
+     * @param addon Addon to retrieve perex from
+     * @returns addon perex in HTML
+     */
+    _retrievePerex(addon: Addon) {
+        const perex = document.createElement('p');
+        perex.innerHTML = addon.perex;
+        this._removeStyles(perex);
+        return perex;
+    }
+
+    /**
+     * Changing locale according to window.location URL
+     * @param event Event to target select element with locale codes
+     */
     _localeChanged(event: Event) {
         const newLocale = (event.target as HTMLSelectElement).value;
         const url = new URL(window.location.href);
@@ -342,6 +452,11 @@ export class WidgetElement extends LitElement {
         }
     }
 
+    // ---------------------- RENDERING ---------------------- //
+    /**
+     * Compose header of the component for both widget states
+     * @returns HTML with component header
+     */
     _renderHeader() {
         return html`
             <header class="panel">
@@ -358,8 +473,8 @@ export class WidgetElement extends LitElement {
                             <option value="">--All--</option>
                             ${this._categories.map((category) => {
                     let name: string;
-                    switch (this._language) {
-                        case 'cz': name = category.nameCs;
+                    switch (getLocale.toString()) {
+                        case 'cs': name = category.nameCs;
                             break;
                         case 'sk': name = category.nameSk;
                             break;
@@ -397,6 +512,11 @@ export class WidgetElement extends LitElement {
         `;
     }
 
+    /**
+     * Render component content in pseudo-state of loading fetching addons
+     * Composed to have layout style same as result
+     * @returns #content with addons "empty" cards
+     */
     _renderPreview() {
         return html`
         <div id='content' class='cards' tabindex='0'>
@@ -410,23 +530,8 @@ export class WidgetElement extends LitElement {
         </div>`;
     }
 
-    _removeStyles(element: HTMLElement): void {
-        Array.from(element.getElementsByTagName('style')).forEach(style => style.parentNode?.removeChild(style));
-        Array.from(element.getElementsByTagName('*')).forEach(element => {
-            element.removeAttribute("style");
-            element.removeAttribute("color");
-        });
-    }
-
-    _retrievePerex(addon: Addon) {
-        const perex = document.createElement('p');
-        perex.innerHTML = addon.perex;
-        this._removeStyles(perex);
-        return perex;
-    }
-
     /**
-     * Rendering function for cards of widget in #content
+     * Render function for cards of widget in #content
      * tabindex has to be present in <a> element because it has no href
      * @returns #content with addon cards
      */
@@ -445,6 +550,10 @@ export class WidgetElement extends LitElement {
         </div>`;
     }
 
+    /**
+     * Render detail of selected addon as a component content
+     * @returns style unified description of addon
+     */
     _renderDetail() {
         const newContent = document.createElement('div');
         newContent.id = 'content';
@@ -454,6 +563,10 @@ export class WidgetElement extends LitElement {
         return newContent;
     }
 
+    /**
+     * Render footer for both widget states
+     * @returns footer element centered with pager (overview) or install button (detail)
+     */
     _renderFooter() {
         return html`
         <footer class="panel">
@@ -475,6 +588,12 @@ export class WidgetElement extends LitElement {
         </footer>`;
     }
 
+    /**
+     * Main render function composing all render functions
+     * Lit library use this function as component content default
+     * component styles are applied on this DOM level
+     * @returns component template inner HTML
+     */
     render() {
         return html`
         <div id='container'>

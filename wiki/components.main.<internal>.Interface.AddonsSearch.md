@@ -2,7 +2,10 @@
 
 # Interface: AddonsSearch
 
-Defined in: [src/components/main.ts:49](https://github.com/Lukuky/ABRA-Flexi-addons-widget/blob/1f6bc28b7e2ffe58d585cfddf89fd3094e61af90/src/components/main.ts#L49)
+Defined in: [src/components/main.ts:72](https://github.com/Lukuky/ABRA-Flexi-addons-widget/blob/6c1373686e834f4b8500601992bff3922309da30/src/components/main.ts#L72)
+
+Addons response structure from Flexibee API
+include only used informations
 
 ## Properties
 
@@ -10,23 +13,7 @@ Defined in: [src/components/main.ts:49](https://github.com/Lukuky/ABRA-Flexi-add
 
 > **content**: [`Addon`](../wiki/components.main.%3Cinternal%3E.Interface.Addon)[]
 
-Defined in: [src/components/main.ts:53](https://github.com/Lukuky/ABRA-Flexi-addons-widget/blob/1f6bc28b7e2ffe58d585cfddf89fd3094e61af90/src/components/main.ts#L53)
-
-***
-
-### first
-
-> **first**: `boolean`
-
-Defined in: [src/components/main.ts:50](https://github.com/Lukuky/ABRA-Flexi-addons-widget/blob/1f6bc28b7e2ffe58d585cfddf89fd3094e61af90/src/components/main.ts#L50)
-
-***
-
-### last
-
-> **last**: `boolean`
-
-Defined in: [src/components/main.ts:51](https://github.com/Lukuky/ABRA-Flexi-addons-widget/blob/1f6bc28b7e2ffe58d585cfddf89fd3094e61af90/src/components/main.ts#L51)
+Defined in: [src/components/main.ts:74](https://github.com/Lukuky/ABRA-Flexi-addons-widget/blob/6c1373686e834f4b8500601992bff3922309da30/src/components/main.ts#L74)
 
 ***
 
@@ -34,4 +21,4 @@ Defined in: [src/components/main.ts:51](https://github.com/Lukuky/ABRA-Flexi-add
 
 > **totalPages**: `number`
 
-Defined in: [src/components/main.ts:52](https://github.com/Lukuky/ABRA-Flexi-addons-widget/blob/1f6bc28b7e2ffe58d585cfddf89fd3094e61af90/src/components/main.ts#L52)
+Defined in: [src/components/main.ts:73](https://github.com/Lukuky/ABRA-Flexi-addons-widget/blob/6c1373686e834f4b8500601992bff3922309da30/src/components/main.ts#L73)

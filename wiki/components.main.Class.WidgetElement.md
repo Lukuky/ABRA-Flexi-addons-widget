@@ -2,7 +2,7 @@
 
 # Class: WidgetElement
 
-Defined in: [src/components/main.ts:62](https://github.com/Lukuky/ABRA-Flexi-addons-widget/blob/1f6bc28b7e2ffe58d585cfddf89fd3094e61af90/src/components/main.ts#L62)
+Defined in: [src/components/main.ts:83](https://github.com/Lukuky/ABRA-Flexi-addons-widget/blob/6c1373686e834f4b8500601992bff3922309da30/src/components/main.ts#L83)
 
 Main addons widget Lit web component
 
@@ -16,7 +16,9 @@ Main addons widget Lit web component
 
 > **new WidgetElement**(): `WidgetElement`
 
-Defined in: [src/components/main.ts:298](https://github.com/Lukuky/ABRA-Flexi-addons-widget/blob/1f6bc28b7e2ffe58d585cfddf89fd3094e61af90/src/components/main.ts#L298)
+Defined in: [src/components/main.ts:358](https://github.com/Lukuky/ABRA-Flexi-addons-widget/blob/6c1373686e834f4b8500601992bff3922309da30/src/components/main.ts#L358)
+
+Initialise component and fetch addons categories for filtering
 
 #### Returns
 
@@ -26,29 +28,41 @@ Defined in: [src/components/main.ts:298](https://github.com/Lukuky/ABRA-Flexi-ad
 
 `LitElement.constructor`
 
-## Other
+## Properties
 
 ### addonsPerPage
 
 > **addonsPerPage**: `number` = `8`
 
-Defined in: [src/components/main.ts:252](https://github.com/Lukuky/ABRA-Flexi-addons-widget/blob/1f6bc28b7e2ffe58d585cfddf89fd3094e61af90/src/components/main.ts#L252)
+Defined in: [src/components/main.ts:299](https://github.com/Lukuky/ABRA-Flexi-addons-widget/blob/6c1373686e834f4b8500601992bff3922309da30/src/components/main.ts#L299)
+
+Maximum amount of addons on one page of overview
 
 ***
 
-### languages
+### styles
 
-> `static` **languages**: `string`[]
+> `static` **styles**: `CSSResult`
 
-Defined in: [src/components/main.ts:222](https://github.com/Lukuky/ABRA-Flexi-addons-widget/blob/1f6bc28b7e2ffe58d585cfddf89fd3094e61af90/src/components/main.ts#L222)
+Defined in: [src/components/main.ts:90](https://github.com/Lukuky/ABRA-Flexi-addons-widget/blob/6c1373686e834f4b8500601992bff3922309da30/src/components/main.ts#L90)
 
-***
+All styles applied to widget component
+Changes only able with rewriting styles for addons-widget selector
+or by specifying undefined CSS variables rewriting default values
+
+#### Overrides
+
+`LitElement.styles`
+
+## Methods
 
 ### \_clear()
 
 > **\_clear**(): `void`
 
-Defined in: [src/components/main.ts:324](https://github.com/Lukuky/ABRA-Flexi-addons-widget/blob/1f6bc28b7e2ffe58d585cfddf89fd3094e61af90/src/components/main.ts#L324)
+Defined in: [src/components/main.ts:401](https://github.com/Lukuky/ABRA-Flexi-addons-widget/blob/6c1373686e834f4b8500601992bff3922309da30/src/components/main.ts#L401)
+
+Reset page number to zero and setting search phrase to empty string
 
 #### Returns
 
@@ -60,7 +74,9 @@ Defined in: [src/components/main.ts:324](https://github.com/Lukuky/ABRA-Flexi-ad
 
 > **\_goBack**(): `void`
 
-Defined in: [src/components/main.ts:310](https://github.com/Lukuky/ABRA-Flexi-addons-widget/blob/1f6bc28b7e2ffe58d585cfddf89fd3094e61af90/src/components/main.ts#L310)
+Defined in: [src/components/main.ts:375](https://github.com/Lukuky/ABRA-Flexi-addons-widget/blob/6c1373686e834f4b8500601992bff3922309da30/src/components/main.ts#L375)
+
+Change state (from detail) to overview
 
 #### Returns
 
@@ -72,13 +88,17 @@ Defined in: [src/components/main.ts:310](https://github.com/Lukuky/ABRA-Flexi-ad
 
 > **\_goToDetail**(`addon`): `void`
 
-Defined in: [src/components/main.ts:314](https://github.com/Lukuky/ABRA-Flexi-addons-widget/blob/1f6bc28b7e2ffe58d585cfddf89fd3094e61af90/src/components/main.ts#L314)
+Defined in: [src/components/main.ts:383](https://github.com/Lukuky/ABRA-Flexi-addons-widget/blob/6c1373686e834f4b8500601992bff3922309da30/src/components/main.ts#L383)
+
+Change state to detail and set addon to be shown
 
 #### Parameters
 
 ##### addon
 
 [`Addon`](../wiki/components.main.%3Cinternal%3E.Interface.Addon)
+
+Addon to be shown in detail
 
 #### Returns
 
@@ -90,13 +110,17 @@ Defined in: [src/components/main.ts:314](https://github.com/Lukuky/ABRA-Flexi-ad
 
 > **\_localeChanged**(`event`): `void`
 
-Defined in: [src/components/main.ts:336](https://github.com/Lukuky/ABRA-Flexi-addons-widget/blob/1f6bc28b7e2ffe58d585cfddf89fd3094e61af90/src/components/main.ts#L336)
+Defined in: [src/components/main.ts:446](https://github.com/Lukuky/ABRA-Flexi-addons-widget/blob/6c1373686e834f4b8500601992bff3922309da30/src/components/main.ts#L446)
+
+Changing locale according to window.location URL
 
 #### Parameters
 
 ##### event
 
 `Event`
+
+Event to target select element with locale codes
 
 #### Returns
 
@@ -108,13 +132,18 @@ Defined in: [src/components/main.ts:336](https://github.com/Lukuky/ABRA-Flexi-ad
 
 > **\_removeStyles**(`element`): `void`
 
-Defined in: [src/components/main.ts:413](https://github.com/Lukuky/ABRA-Flexi-addons-widget/blob/1f6bc28b7e2ffe58d585cfddf89fd3094e61af90/src/components/main.ts#L413)
+Defined in: [src/components/main.ts:422](https://github.com/Lukuky/ABRA-Flexi-addons-widget/blob/6c1373686e834f4b8500601992bff3922309da30/src/components/main.ts#L422)
+
+Remove all style elements and attributes from element subtree including color attribute
+Used for unify descriptions and perexes from Flexibee API
 
 #### Parameters
 
 ##### element
 
 `HTMLElement`
+
+root of DOM subtree to have removed styles
 
 #### Returns
 
@@ -126,11 +155,15 @@ Defined in: [src/components/main.ts:413](https://github.com/Lukuky/ABRA-Flexi-ad
 
 > **\_renderDetail**(): `HTMLDivElement`
 
-Defined in: [src/components/main.ts:448](https://github.com/Lukuky/ABRA-Flexi-addons-widget/blob/1f6bc28b7e2ffe58d585cfddf89fd3094e61af90/src/components/main.ts#L448)
+Defined in: [src/components/main.ts:557](https://github.com/Lukuky/ABRA-Flexi-addons-widget/blob/6c1373686e834f4b8500601992bff3922309da30/src/components/main.ts#L557)
+
+Render detail of selected addon as a component content
 
 #### Returns
 
 `HTMLDivElement`
+
+style unified description of addon
 
 ***
 
@@ -138,11 +171,15 @@ Defined in: [src/components/main.ts:448](https://github.com/Lukuky/ABRA-Flexi-ad
 
 > **\_renderFooter**(): `TemplateResult`\<`1`\>
 
-Defined in: [src/components/main.ts:457](https://github.com/Lukuky/ABRA-Flexi-addons-widget/blob/1f6bc28b7e2ffe58d585cfddf89fd3094e61af90/src/components/main.ts#L457)
+Defined in: [src/components/main.ts:570](https://github.com/Lukuky/ABRA-Flexi-addons-widget/blob/6c1373686e834f4b8500601992bff3922309da30/src/components/main.ts#L570)
+
+Render footer for both widget states
 
 #### Returns
 
 `TemplateResult`\<`1`\>
+
+footer element centered with pager (overview) or install button (detail)
 
 ***
 
@@ -150,11 +187,15 @@ Defined in: [src/components/main.ts:457](https://github.com/Lukuky/ABRA-Flexi-ad
 
 > **\_renderHeader**(): `TemplateResult`\<`1`\>
 
-Defined in: [src/components/main.ts:345](https://github.com/Lukuky/ABRA-Flexi-addons-widget/blob/1f6bc28b7e2ffe58d585cfddf89fd3094e61af90/src/components/main.ts#L345)
+Defined in: [src/components/main.ts:460](https://github.com/Lukuky/ABRA-Flexi-addons-widget/blob/6c1373686e834f4b8500601992bff3922309da30/src/components/main.ts#L460)
+
+Compose header of the component for both widget states
 
 #### Returns
 
 `TemplateResult`\<`1`\>
+
+HTML with component header
 
 ***
 
@@ -162,9 +203,9 @@ Defined in: [src/components/main.ts:345](https://github.com/Lukuky/ABRA-Flexi-ad
 
 > **\_renderOverview**(): `TemplateResult`\<`1`\>
 
-Defined in: [src/components/main.ts:433](https://github.com/Lukuky/ABRA-Flexi-addons-widget/blob/1f6bc28b7e2ffe58d585cfddf89fd3094e61af90/src/components/main.ts#L433)
+Defined in: [src/components/main.ts:538](https://github.com/Lukuky/ABRA-Flexi-addons-widget/blob/6c1373686e834f4b8500601992bff3922309da30/src/components/main.ts#L538)
 
-Rendering function for cards of widget in #content
+Render function for cards of widget in #content
 tabindex has to be present in <a> element because it has no href
 
 #### Returns
@@ -179,11 +220,16 @@ tabindex has to be present in <a> element because it has no href
 
 > **\_renderPreview**(): `TemplateResult`\<`1`\>
 
-Defined in: [src/components/main.ts:400](https://github.com/Lukuky/ABRA-Flexi-addons-widget/blob/1f6bc28b7e2ffe58d585cfddf89fd3094e61af90/src/components/main.ts#L400)
+Defined in: [src/components/main.ts:520](https://github.com/Lukuky/ABRA-Flexi-addons-widget/blob/6c1373686e834f4b8500601992bff3922309da30/src/components/main.ts#L520)
+
+Render component content in pseudo-state of loading fetching addons
+Composed to have layout style same as result
 
 #### Returns
 
 `TemplateResult`\<`1`\>
+
+#content with addons "empty" cards
 
 ***
 
@@ -191,7 +237,9 @@ Defined in: [src/components/main.ts:400](https://github.com/Lukuky/ABRA-Flexi-ad
 
 > **\_retrievePerex**(`addon`): `HTMLParagraphElement`
 
-Defined in: [src/components/main.ts:421](https://github.com/Lukuky/ABRA-Flexi-addons-widget/blob/1f6bc28b7e2ffe58d585cfddf89fd3094e61af90/src/components/main.ts#L421)
+Defined in: [src/components/main.ts:435](https://github.com/Lukuky/ABRA-Flexi-addons-widget/blob/6c1373686e834f4b8500601992bff3922309da30/src/components/main.ts#L435)
+
+Getting perex out of addon fetched from Flexibee API
 
 #### Parameters
 
@@ -199,9 +247,13 @@ Defined in: [src/components/main.ts:421](https://github.com/Lukuky/ABRA-Flexi-ad
 
 [`Addon`](../wiki/components.main.%3Cinternal%3E.Interface.Addon)
 
+Addon to retrieve perex from
+
 #### Returns
 
 `HTMLParagraphElement`
+
+addon perex in HTML
 
 ***
 
@@ -209,7 +261,10 @@ Defined in: [src/components/main.ts:421](https://github.com/Lukuky/ABRA-Flexi-ad
 
 > **\_search**(): `void`
 
-Defined in: [src/components/main.ts:330](https://github.com/Lukuky/ABRA-Flexi-addons-widget/blob/1f6bc28b7e2ffe58d585cfddf89fd3094e61af90/src/components/main.ts#L330)
+Defined in: [src/components/main.ts:411](https://github.com/Lukuky/ABRA-Flexi-addons-widget/blob/6c1373686e834f4b8500601992bff3922309da30/src/components/main.ts#L411)
+
+Set searchPhrase from text input (and cause fetching new addons)
+Nulling the page number
 
 #### Returns
 
@@ -221,7 +276,10 @@ Defined in: [src/components/main.ts:330](https://github.com/Lukuky/ABRA-Flexi-ad
 
 > **\_updateCategory**(`e`): `void`
 
-Defined in: [src/components/main.ts:319](https://github.com/Lukuky/ABRA-Flexi-addons-widget/blob/1f6bc28b7e2ffe58d585cfddf89fd3094e61af90/src/components/main.ts#L319)
+Defined in: [src/components/main.ts:393](https://github.com/Lukuky/ABRA-Flexi-addons-widget/blob/6c1373686e834f4b8500601992bff3922309da30/src/components/main.ts#L393)
+
+Update category on categories select element change
+Nulling the page number
 
 #### Parameters
 
@@ -229,64 +287,30 @@ Defined in: [src/components/main.ts:319](https://github.com/Lukuky/ABRA-Flexi-ad
 
 `Event`
 
+Event for targeting select for the value
+
 #### Returns
 
 `void`
 
-## rendering
+***
 
 ### render()
 
 > **render**(): `TemplateResult`\<`1`\>
 
-Defined in: [src/components/main.ts:478](https://github.com/Lukuky/ABRA-Flexi-addons-widget/blob/1f6bc28b7e2ffe58d585cfddf89fd3094e61af90/src/components/main.ts#L478)
+Defined in: [src/components/main.ts:597](https://github.com/Lukuky/ABRA-Flexi-addons-widget/blob/6c1373686e834f4b8500601992bff3922309da30/src/components/main.ts#L597)
 
-Invoked on each update to perform rendering tasks. This method may return
-any value renderable by lit-html's `ChildPart` - typically a
-`TemplateResult`. Setting properties inside this method will *not* trigger
-the element to update.
+Main render function composing all render functions
+Lit library use this function as component content default
+component styles are applied on this DOM level
 
 #### Returns
 
 `TemplateResult`\<`1`\>
 
+component template inner HTML
+
 #### Overrides
 
 `LitElement.render`
-
-## styles
-
-### styles
-
-> `static` **styles**: `CSSResult`
-
-Defined in: [src/components/main.ts:63](https://github.com/Lukuky/ABRA-Flexi-addons-widget/blob/1f6bc28b7e2ffe58d585cfddf89fd3094e61af90/src/components/main.ts#L63)
-
-Array of styles to apply to the element. The styles should be defined
-using the css tag function, via constructible stylesheets, or
-imported from native CSS module scripts.
-
-Note on Content Security Policy:
-
-Element styles are implemented with `<style>` tags when the browser doesn't
-support adopted StyleSheets. To use such `<style>` tags with the style-src
-CSP directive, the style-src value must either include 'unsafe-inline' or
-`nonce-<base64-value>` with `<base64-value>` replaced be a server-generated
-nonce.
-
-To provide a nonce to use on generated `<style>` elements, set
-`window.litNonce` to a server-generated nonce in your page's HTML, before
-loading application code:
-
-```html
-<script>
-  // Generated and unique per request:
-  window.litNonce = 'a1b2c3d4';
-</script>
-```
-
-#### Nocollapse
-
-#### Overrides
-
-`LitElement.styles`

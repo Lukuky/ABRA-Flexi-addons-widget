@@ -4,4 +4,8 @@
 
 > **WidgetState** = `"overview"` \| `"detail"`
 
-Defined in: [src/components/main.ts:24](https://github.com/Lukuky/ABRA-Flexi-addons-widget/blob/1f6bc28b7e2ffe58d585cfddf89fd3094e61af90/src/components/main.ts#L24)
+Defined in: [src/components/main.ts:34](https://github.com/Lukuky/ABRA-Flexi-addons-widget/blob/6c1373686e834f4b8500601992bff3922309da30/src/components/main.ts#L34)
+
+Two only possible states of the widget
+overview ~ of all/filtered addons, paginated
+detail ~ focus on one addon with more informations
