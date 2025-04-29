@@ -13,5 +13,10 @@
         "typedoc-github-wiki-theme"
     ],
     "githubPages": false,
-    "excludeExternals": true
+    "excludeExternals": true,
+    // https://typedoc.org/documents/Options.Configuration.html
+    "compilerOptions": {
+        "skipLibCheck": true,
+        "strictNullChecks": false
+    }
 }

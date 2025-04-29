@@ -2,7 +2,7 @@
 
 # Interface: Category
 
-Defined in: [src/components/main.ts:40](https://github.com/Lukuky/ABRA-Flexi-addons-widget/blob/6c1373686e834f4b8500601992bff3922309da30/src/components/main.ts#L40)
+Defined in: [src/components/main.ts:40](https://github.com/Lukuky/ABRA-Flexi-addons-widget/blob/af2b8493423bcd604a74126abc4fb5659324e585/src/components/main.ts#L40)
 
 Categories of addons
 keys from Flexibee API response
@@ -13,7 +13,7 @@ keys from Flexibee API response
 
 > **active**: `boolean`
 
-Defined in: [src/components/main.ts:46](https://github.com/Lukuky/ABRA-Flexi-addons-widget/blob/6c1373686e834f4b8500601992bff3922309da30/src/components/main.ts#L46)
+Defined in: [src/components/main.ts:46](https://github.com/Lukuky/ABRA-Flexi-addons-widget/blob/af2b8493423bcd604a74126abc4fb5659324e585/src/components/main.ts#L46)
 
 ***
 
@@ -21,7 +21,7 @@ Defined in: [src/components/main.ts:46](https://github.com/Lukuky/ABRA-Flexi-add
 
 > **id**: `number`
 
-Defined in: [src/components/main.ts:41](https://github.com/Lukuky/ABRA-Flexi-addons-widget/blob/6c1373686e834f4b8500601992bff3922309da30/src/components/main.ts#L41)
+Defined in: [src/components/main.ts:41](https://github.com/Lukuky/ABRA-Flexi-addons-widget/blob/af2b8493423bcd604a74126abc4fb5659324e585/src/components/main.ts#L41)
 
 ***
 
@@ -29,7 +29,7 @@ Defined in: [src/components/main.ts:41](https://github.com/Lukuky/ABRA-Flexi-add
 
 > **nameCs**: `string`
 
-Defined in: [src/components/main.ts:42](https://github.com/Lukuky/ABRA-Flexi-addons-widget/blob/6c1373686e834f4b8500601992bff3922309da30/src/components/main.ts#L42)
+Defined in: [src/components/main.ts:42](https://github.com/Lukuky/ABRA-Flexi-addons-widget/blob/af2b8493423bcd604a74126abc4fb5659324e585/src/components/main.ts#L42)
 
 ***
 
@@ -37,7 +37,7 @@ Defined in: [src/components/main.ts:42](https://github.com/Lukuky/ABRA-Flexi-add
 
 > **nameDe**: `string`
 
-Defined in: [src/components/main.ts:45](https://github.com/Lukuky/ABRA-Flexi-addons-widget/blob/6c1373686e834f4b8500601992bff3922309da30/src/components/main.ts#L45)
+Defined in: [src/components/main.ts:45](https://github.com/Lukuky/ABRA-Flexi-addons-widget/blob/af2b8493423bcd604a74126abc4fb5659324e585/src/components/main.ts#L45)
 
 ***
 
@@ -45,7 +45,7 @@ Defined in: [src/components/main.ts:45](https://github.com/Lukuky/ABRA-Flexi-add
 
 > **nameEn**: `string`
 
-Defined in: [src/components/main.ts:44](https://github.com/Lukuky/ABRA-Flexi-addons-widget/blob/6c1373686e834f4b8500601992bff3922309da30/src/components/main.ts#L44)
+Defined in: [src/components/main.ts:44](https://github.com/Lukuky/ABRA-Flexi-addons-widget/blob/af2b8493423bcd604a74126abc4fb5659324e585/src/components/main.ts#L44)
 
 ***
 
@@ -53,4 +53,4 @@ Defined in: [src/components/main.ts:44](https://github.com/Lukuky/ABRA-Flexi-add
 
 > **nameSk**: `string`
 
-Defined in: [src/components/main.ts:43](https://github.com/Lukuky/ABRA-Flexi-addons-widget/blob/6c1373686e834f4b8500601992bff3922309da30/src/components/main.ts#L43)
+Defined in: [src/components/main.ts:43](https://github.com/Lukuky/ABRA-Flexi-addons-widget/blob/af2b8493423bcd604a74126abc4fb5659324e585/src/components/main.ts#L43)

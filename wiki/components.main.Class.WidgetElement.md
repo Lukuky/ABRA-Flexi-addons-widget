@@ -2,7 +2,7 @@
 
 # Class: WidgetElement
 
-Defined in: [src/components/main.ts:83](https://github.com/Lukuky/ABRA-Flexi-addons-widget/blob/6c1373686e834f4b8500601992bff3922309da30/src/components/main.ts#L83)
+Defined in: [src/components/main.ts:82](https://github.com/Lukuky/ABRA-Flexi-addons-widget/blob/af2b8493423bcd604a74126abc4fb5659324e585/src/components/main.ts#L82)
 
 Main addons widget Lit web component
 
@@ -16,7 +16,7 @@ Main addons widget Lit web component
 
 > **new WidgetElement**(): `WidgetElement`
 
-Defined in: [src/components/main.ts:358](https://github.com/Lukuky/ABRA-Flexi-addons-widget/blob/6c1373686e834f4b8500601992bff3922309da30/src/components/main.ts#L358)
+Defined in: [src/components/main.ts:385](https://github.com/Lukuky/ABRA-Flexi-addons-widget/blob/af2b8493423bcd604a74126abc4fb5659324e585/src/components/main.ts#L385)
 
 Initialise component and fetch addons categories for filtering
 
@@ -34,7 +34,7 @@ Initialise component and fetch addons categories for filtering
 
 > **addonsPerPage**: `number` = `8`
 
-Defined in: [src/components/main.ts:299](https://github.com/Lukuky/ABRA-Flexi-addons-widget/blob/6c1373686e834f4b8500601992bff3922309da30/src/components/main.ts#L299)
+Defined in: [src/components/main.ts:304](https://github.com/Lukuky/ABRA-Flexi-addons-widget/blob/af2b8493423bcd604a74126abc4fb5659324e585/src/components/main.ts#L304)
 
 Maximum amount of addons on one page of overview
 
@@ -44,7 +44,7 @@ Maximum amount of addons on one page of overview
 
 > `static` **styles**: `CSSResult`
 
-Defined in: [src/components/main.ts:90](https://github.com/Lukuky/ABRA-Flexi-addons-widget/blob/6c1373686e834f4b8500601992bff3922309da30/src/components/main.ts#L90)
+Defined in: [src/components/main.ts:89](https://github.com/Lukuky/ABRA-Flexi-addons-widget/blob/af2b8493423bcd604a74126abc4fb5659324e585/src/components/main.ts#L89)
 
 All styles applied to widget component
 Changes only able with rewriting styles for addons-widget selector
@@ -56,25 +56,11 @@ or by specifying undefined CSS variables rewriting default values
 
 ## Methods
 
-### \_clear()
-
-> **\_clear**(): `void`
-
-Defined in: [src/components/main.ts:401](https://github.com/Lukuky/ABRA-Flexi-addons-widget/blob/6c1373686e834f4b8500601992bff3922309da30/src/components/main.ts#L401)
-
-Reset page number to zero and setting search phrase to empty string
-
-#### Returns
-
-`void`
-
-***
-
 ### \_goBack()
 
 > **\_goBack**(): `void`
 
-Defined in: [src/components/main.ts:375](https://github.com/Lukuky/ABRA-Flexi-addons-widget/blob/6c1373686e834f4b8500601992bff3922309da30/src/components/main.ts#L375)
+Defined in: [src/components/main.ts:401](https://github.com/Lukuky/ABRA-Flexi-addons-widget/blob/af2b8493423bcd604a74126abc4fb5659324e585/src/components/main.ts#L401)
 
 Change state (from detail) to overview
 
@@ -88,7 +74,7 @@ Change state (from detail) to overview
 
 > **\_goToDetail**(`addon`): `void`
 
-Defined in: [src/components/main.ts:383](https://github.com/Lukuky/ABRA-Flexi-addons-widget/blob/6c1373686e834f4b8500601992bff3922309da30/src/components/main.ts#L383)
+Defined in: [src/components/main.ts:409](https://github.com/Lukuky/ABRA-Flexi-addons-widget/blob/af2b8493423bcd604a74126abc4fb5659324e585/src/components/main.ts#L409)
 
 Change state to detail and set addon to be shown
 
@@ -106,11 +92,29 @@ Addon to be shown in detail
 
 ***
 
+### \_localeCategoryName()
+
+> **\_localeCategoryName**(`category`): `string`
+
+Defined in: [src/components/main.ts:477](https://github.com/Lukuky/ABRA-Flexi-addons-widget/blob/af2b8493423bcd604a74126abc4fb5659324e585/src/components/main.ts#L477)
+
+#### Parameters
+
+##### category
+
+[`Category`](../wiki/components.main.%3Cinternal%3E.Interface.Category)
+
+#### Returns
+
+`string`
+
+***
+
 ### \_localeChanged()
 
 > **\_localeChanged**(`event`): `void`
 
-Defined in: [src/components/main.ts:446](https://github.com/Lukuky/ABRA-Flexi-addons-widget/blob/6c1373686e834f4b8500601992bff3922309da30/src/components/main.ts#L446)
+Defined in: [src/components/main.ts:472](https://github.com/Lukuky/ABRA-Flexi-addons-widget/blob/af2b8493423bcd604a74126abc4fb5659324e585/src/components/main.ts#L472)
 
 Changing locale according to window.location URL
 
@@ -132,7 +136,7 @@ Event to target select element with locale codes
 
 > **\_removeStyles**(`element`): `void`
 
-Defined in: [src/components/main.ts:422](https://github.com/Lukuky/ABRA-Flexi-addons-widget/blob/6c1373686e834f4b8500601992bff3922309da30/src/components/main.ts#L422)
+Defined in: [src/components/main.ts:448](https://github.com/Lukuky/ABRA-Flexi-addons-widget/blob/af2b8493423bcd604a74126abc4fb5659324e585/src/components/main.ts#L448)
 
 Remove all style elements and attributes from element subtree including color attribute
 Used for unify descriptions and perexes from Flexibee API
@@ -155,7 +159,7 @@ root of DOM subtree to have removed styles
 
 > **\_renderDetail**(): `HTMLDivElement`
 
-Defined in: [src/components/main.ts:557](https://github.com/Lukuky/ABRA-Flexi-addons-widget/blob/6c1373686e834f4b8500601992bff3922309da30/src/components/main.ts#L557)
+Defined in: [src/components/main.ts:582](https://github.com/Lukuky/ABRA-Flexi-addons-widget/blob/af2b8493423bcd604a74126abc4fb5659324e585/src/components/main.ts#L582)
 
 Render detail of selected addon as a component content
 
@@ -171,7 +175,7 @@ style unified description of addon
 
 > **\_renderFooter**(): `TemplateResult`\<`1`\>
 
-Defined in: [src/components/main.ts:570](https://github.com/Lukuky/ABRA-Flexi-addons-widget/blob/6c1373686e834f4b8500601992bff3922309da30/src/components/main.ts#L570)
+Defined in: [src/components/main.ts:595](https://github.com/Lukuky/ABRA-Flexi-addons-widget/blob/af2b8493423bcd604a74126abc4fb5659324e585/src/components/main.ts#L595)
 
 Render footer for both widget states
 
@@ -187,7 +191,7 @@ footer element centered with pager (overview) or install button (detail)
 
 > **\_renderHeader**(): `TemplateResult`\<`1`\>
 
-Defined in: [src/components/main.ts:460](https://github.com/Lukuky/ABRA-Flexi-addons-widget/blob/6c1373686e834f4b8500601992bff3922309da30/src/components/main.ts#L460)
+Defined in: [src/components/main.ts:497](https://github.com/Lukuky/ABRA-Flexi-addons-widget/blob/af2b8493423bcd604a74126abc4fb5659324e585/src/components/main.ts#L497)
 
 Compose header of the component for both widget states
 
@@ -203,7 +207,7 @@ HTML with component header
 
 > **\_renderOverview**(): `TemplateResult`\<`1`\>
 
-Defined in: [src/components/main.ts:538](https://github.com/Lukuky/ABRA-Flexi-addons-widget/blob/6c1373686e834f4b8500601992bff3922309da30/src/components/main.ts#L538)
+Defined in: [src/components/main.ts:563](https://github.com/Lukuky/ABRA-Flexi-addons-widget/blob/af2b8493423bcd604a74126abc4fb5659324e585/src/components/main.ts#L563)
 
 Render function for cards of widget in #content
 tabindex has to be present in <a> element because it has no href
@@ -220,7 +224,7 @@ tabindex has to be present in <a> element because it has no href
 
 > **\_renderPreview**(): `TemplateResult`\<`1`\>
 
-Defined in: [src/components/main.ts:520](https://github.com/Lukuky/ABRA-Flexi-addons-widget/blob/6c1373686e834f4b8500601992bff3922309da30/src/components/main.ts#L520)
+Defined in: [src/components/main.ts:545](https://github.com/Lukuky/ABRA-Flexi-addons-widget/blob/af2b8493423bcd604a74126abc4fb5659324e585/src/components/main.ts#L545)
 
 Render component content in pseudo-state of loading fetching addons
 Composed to have layout style same as result
@@ -233,11 +237,25 @@ Composed to have layout style same as result
 
 ***
 
+### \_resetSearch()
+
+> **\_resetSearch**(): `void`
+
+Defined in: [src/components/main.ts:427](https://github.com/Lukuky/ABRA-Flexi-addons-widget/blob/af2b8493423bcd604a74126abc4fb5659324e585/src/components/main.ts#L427)
+
+Reset page number to zero and setting search phrase to empty string
+
+#### Returns
+
+`void`
+
+***
+
 ### \_retrievePerex()
 
 > **\_retrievePerex**(`addon`): `HTMLParagraphElement`
 
-Defined in: [src/components/main.ts:435](https://github.com/Lukuky/ABRA-Flexi-addons-widget/blob/6c1373686e834f4b8500601992bff3922309da30/src/components/main.ts#L435)
+Defined in: [src/components/main.ts:461](https://github.com/Lukuky/ABRA-Flexi-addons-widget/blob/af2b8493423bcd604a74126abc4fb5659324e585/src/components/main.ts#L461)
 
 Getting perex out of addon fetched from Flexibee API
 
@@ -261,10 +279,28 @@ addon perex in HTML
 
 > **\_search**(): `void`
 
-Defined in: [src/components/main.ts:411](https://github.com/Lukuky/ABRA-Flexi-addons-widget/blob/6c1373686e834f4b8500601992bff3922309da30/src/components/main.ts#L411)
+Defined in: [src/components/main.ts:437](https://github.com/Lukuky/ABRA-Flexi-addons-widget/blob/af2b8493423bcd604a74126abc4fb5659324e585/src/components/main.ts#L437)
 
 Set searchPhrase from text input (and cause fetching new addons)
 Nulling the page number
+
+#### Returns
+
+`void`
+
+***
+
+### \_searchOnEnter()
+
+> **\_searchOnEnter**(`e`): `void`
+
+Defined in: [src/components/main.ts:486](https://github.com/Lukuky/ABRA-Flexi-addons-widget/blob/af2b8493423bcd604a74126abc4fb5659324e585/src/components/main.ts#L486)
+
+#### Parameters
+
+##### e
+
+`Event`
 
 #### Returns
 
@@ -276,7 +312,7 @@ Nulling the page number
 
 > **\_updateCategory**(`e`): `void`
 
-Defined in: [src/components/main.ts:393](https://github.com/Lukuky/ABRA-Flexi-addons-widget/blob/6c1373686e834f4b8500601992bff3922309da30/src/components/main.ts#L393)
+Defined in: [src/components/main.ts:419](https://github.com/Lukuky/ABRA-Flexi-addons-widget/blob/af2b8493423bcd604a74126abc4fb5659324e585/src/components/main.ts#L419)
 
 Update category on categories select element change
 Nulling the page number
@@ -299,7 +335,7 @@ Event for targeting select for the value
 
 > **render**(): `TemplateResult`\<`1`\>
 
-Defined in: [src/components/main.ts:597](https://github.com/Lukuky/ABRA-Flexi-addons-widget/blob/6c1373686e834f4b8500601992bff3922309da30/src/components/main.ts#L597)
+Defined in: [src/components/main.ts:622](https://github.com/Lukuky/ABRA-Flexi-addons-widget/blob/af2b8493423bcd604a74126abc4fb5659324e585/src/components/main.ts#L622)
 
 Main render function composing all render functions
 Lit library use this function as component content default

@@ -2,7 +2,7 @@
 
 # Class: LoaderElement
 
-Defined in: [src/components/loader.ts:8](https://github.com/Lukuky/ABRA-Flexi-addons-widget/blob/6c1373686e834f4b8500601992bff3922309da30/src/components/loader.ts#L8)
+Defined in: [src/components/loader.ts:8](https://github.com/Lukuky/ABRA-Flexi-addons-widget/blob/af2b8493423bcd604a74126abc4fb5659324e585/src/components/loader.ts#L8)
 
 ## Extends
 
@@ -30,7 +30,7 @@ Defined in: node\_modules/@lit/reactive-element/development/reactive-element.d.t
 
 > **size**: `number` = `6`
 
-Defined in: [src/components/loader.ts:33](https://github.com/Lukuky/ABRA-Flexi-addons-widget/blob/6c1373686e834f4b8500601992bff3922309da30/src/components/loader.ts#L33)
+Defined in: [src/components/loader.ts:33](https://github.com/Lukuky/ABRA-Flexi-addons-widget/blob/af2b8493423bcd604a74126abc4fb5659324e585/src/components/loader.ts#L33)
 
 ## rendering
 
@@ -38,7 +38,7 @@ Defined in: [src/components/loader.ts:33](https://github.com/Lukuky/ABRA-Flexi-a
 
 > **render**(): `TemplateResult`\<`1`\>
 
-Defined in: [src/components/loader.ts:35](https://github.com/Lukuky/ABRA-Flexi-addons-widget/blob/6c1373686e834f4b8500601992bff3922309da30/src/components/loader.ts#L35)
+Defined in: [src/components/loader.ts:35](https://github.com/Lukuky/ABRA-Flexi-addons-widget/blob/af2b8493423bcd604a74126abc4fb5659324e585/src/components/loader.ts#L35)
 
 Invoked on each update to perform rendering tasks. This method may return
 any value renderable by lit-html's `ChildPart` - typically a
@@ -59,7 +59,7 @@ the element to update.
 
 > `static` **styles**: `CSSResult`
 
-Defined in: [src/components/loader.ts:9](https://github.com/Lukuky/ABRA-Flexi-addons-widget/blob/6c1373686e834f4b8500601992bff3922309da30/src/components/loader.ts#L9)
+Defined in: [src/components/loader.ts:9](https://github.com/Lukuky/ABRA-Flexi-addons-widget/blob/af2b8493423bcd604a74126abc4fb5659324e585/src/components/loader.ts#L9)
 
 Array of styles to apply to the element. The styles should be defined
 using the css tag function, via constructible stylesheets, or

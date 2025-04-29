@@ -7,7 +7,7 @@ on:
     branches: develop
 
 jobs:
-  sync-github-wiki:
+  localize-build-test-docs:
     permissions:
       contents: write
     runs-on: ubuntu-latest
@@ -33,10 +33,19 @@ jobs:
         if: steps.cache.outputs.cache-hit != 'true'
         run: npm ci
 
-      - name: Build Documentation
+      - name: Localize
+        run: npm run localize
+
+      - name: Build
+        run: npm run build
+
+      - name: Test
+        run: npm run test
+
+      - name: Docs
         run: npm run docs
 
-      - name: Sync GitHub Wiki
+      - name: GitHub Wiki
         uses: spenserblack/actions-wiki@main
         with:
           path: wiki

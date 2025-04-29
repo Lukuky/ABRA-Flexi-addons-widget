@@ -27,9 +27,22 @@ Compiling and bundling source code into the `/dist` directory in dev mode for de
 npm run watch
 ```
 
-Compiling and bundling source code into the `/dist` directory in production mode with minification and licencing Lit element.
+Create localization JavaScript files into `/src/generated/locales` according to `.xlf` translations in `/xliff`.
 ```bash
-npm run build:all
+npm run localize
 ```
 
-Always build before pushing.
+Compiling and bundling source code into the `/dist` directory in production mode with minification and licencing Lit element.
+```bash
+npm run build
+```
+
+Run all tests in `/src/test` directory.
+```bash
+npm run test
+```
+
+Create a documentation from TypeScript comments using Typedoc into Markdown files in `/wiki` directory. Output is synchonized with GitHub wiki afterwards.
+```bash
+npm run docs
+```
