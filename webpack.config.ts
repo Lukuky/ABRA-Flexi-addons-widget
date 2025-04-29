@@ -1,5 +1,7 @@
 import { fileURLToPath } from 'url';
 import path from 'path';
+import LicensePlugin from 'webpack-license-plugin';
+import TerserPlugin from 'terser-webpack-plugin';
 
 export const __filename = fileURLToPath(import.meta.url);
 export const __dirname = path.dirname(__filename);
@@ -27,5 +29,15 @@ export default {
                 use: 'html-loader',
             },
         ],
-    }
+    },
+    plugins: [
+        // https://www.npmjs.com/package/webpack-license-plugin
+        new LicensePlugin({ outputFilename: '../thirdPartyNotice.json' })
+    ],
+    // https://stackoverflow.com/questions/64818489/webpack-omit-creation-of-license-txt-files
+    optimization: {
+        minimizer: [new TerserPlugin({
+            extractComments: false,
+        })],
+    },
 };
