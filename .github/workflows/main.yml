@@ -40,7 +40,8 @@ jobs:
         run: npm run build
 
       - name: Test
-        run: npm run test
+      # https://playwright.dev/docs/ci-intro
+        run: npx playwright install --with-deps && npm run test
 
       - name: Docs
         run: npm run docs
