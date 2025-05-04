@@ -1,2 +1,10 @@
 # Dependency directory
 node_modules/
+
+# Generated
+.vscode
+dist/
+wiki/
+thirdPartyNotice.json
+package-lock.json
+coverage/
