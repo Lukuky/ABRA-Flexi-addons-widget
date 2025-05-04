@@ -328,19 +328,17 @@ export class WidgetElement extends LitElement {
     /**
      * Task fetching all addons categories from Flexibee API to component's state
      */
-    private _TaskCategories = new Task(this, {
+    public _TaskCategories = new Task(this, {
 
         task: async ([], { signal }) => {
             const url = new URL('https://support.flexibee.eu/api/categories');
-            const request = new Request(url);
-            const response = await fetch(request, { signal });
+            const response = await fetch(url, { signal });
 
             if (!response.ok) { throw new Error(response.status.toString()); }
 
-            const data: Category[] = await response.json();
-            console.log(data);
+            const data: Category[] = await response.json() as Array<Category>;
+            this._categories = data;
             return data;
-
         },
 
         args: () => []
@@ -360,13 +358,11 @@ export class WidgetElement extends LitElement {
             url.searchParams.append('page', page.toString());
             url.searchParams.append('size', size.toString());
             if (search) url.searchParams.append('search', search);
-            const request = new Request(url);
-            const response = await fetch(request, { signal });
+            const response = await fetch(url, { signal });
 
             if (!response.ok) { throw new Error(response.status.toString()); }
 
-            const data: AddonsSearch = await response.json();
-            console.log(data);
+            const data: AddonsSearch = await response.json() as AddonsSearch;
             this._addonsTotalPages = data.totalPages;
             this._currentAddons = data.content;
 
@@ -378,16 +374,14 @@ export class WidgetElement extends LitElement {
     });
 
 
-    // ---------------------- CONSTRUCTOR ---------------------- //
+    // ---------------------- CALLBACK FUNCTION ---------------------- //
     /**
-     * Initialise component and fetch addons categories for filtering
+     * Fetch categories after connecting to DOM
      */
-    constructor() {
-        super();
+    connectedCallback(): void {
+        super.connectedCallback();
         this._TaskCategories.run();
-        this._TaskCategories.taskComplete.then((categories) => {
-            this._categories = categories || [];
-        }).catch((error) => {
+        this._TaskCategories.taskComplete.catch((error) => {
             console.error('Failed to fetch categories:', error);
             this._categories = [];
         });

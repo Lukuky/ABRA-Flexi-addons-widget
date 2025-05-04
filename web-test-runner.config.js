@@ -6,14 +6,12 @@ import { fileURLToPath } from 'url';
 
 export default {
     nodeResolve: true,
-    // Using playwright to test in multiple browsers at once
     browsers: [
         playwrightLauncher({ product: 'chromium' }),
         playwrightLauncher({ product: 'firefox' }),
         playwrightLauncher({ product: 'webkit' }),
     ],
     files: 'test/**/*.test.ts',
-    // not using the tsconfig
     mimeTypes: {
         '**/*.ts': 'application/javascript',
     },
@@ -23,4 +21,5 @@ export default {
             tsconfig: fileURLToPath(new URL('./tsconfig.json', import.meta.url)),
         })
     ],
+    coverage: true
 };
