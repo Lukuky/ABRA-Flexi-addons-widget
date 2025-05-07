@@ -7,7 +7,7 @@ export const __filename = fileURLToPath(import.meta.url);
 export const __dirname = path.dirname(__filename);
 
 export default {
-    entry: './src/index.ts',
+    entry: './src/main.ts',
     output: {
         filename: 'addons-widget.js',
         path: path.resolve(__dirname, 'dist'),
@@ -27,6 +27,10 @@ export default {
             {
                 test: /\.html$/,
                 use: 'html-loader',
+            },
+            {
+                test: /\.(png|svg|jpg|jpeg|gif)$/i,
+                type: 'asset/resource',
             },
         ],
     },

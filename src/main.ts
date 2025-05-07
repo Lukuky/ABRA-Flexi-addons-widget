@@ -1,10 +1,11 @@
-import { LitElement, html, css } from 'lit';
+import { LitElement, html, css, unsafeCSS } from 'lit';
 import { Task } from '@lit/task';
 import { customElement, property, state } from 'lit/decorators.js';
 import { repeat } from 'lit/directives/repeat.js';
 import { msg, localized } from '@lit/localize';
 import { configureLocalization } from '@lit/localize';
-import { sourceLocale, targetLocales, allLocales } from '../generated/locale-codes.js';
+import { sourceLocale, targetLocales, allLocales } from './generated/locale-codes.js';
+
 import './loader.ts';
 
 /**
@@ -12,7 +13,7 @@ import './loader.ts';
  * Specified in locale-codes.js generated from lit-localize.json
  */
 const localizedTemplates = new Map(
-    targetLocales.map((locale) => [locale, import(`../generated/locales/${locale}.js`)])
+    targetLocales.map((locale) => [locale, import(`./generated/locales/${locale}.js`)])
 
 );
 
@@ -87,9 +88,17 @@ export class WidgetElement extends LitElement {
      * or by specifying undefined CSS variables rewriting default values
      */
     static styles = css`
+        /**
+        * There is no possible to use @font-face or @import in Lit yet, 
+        * nighter importing font in <link> in render HTML does not work.
+        * Therefore it is need to already have the font imported in the 
+        * hosting page and use variable --font-family to pass it here.
+        * More about the issue here:
+        * https://github.com/lit/lit-element/issues/793
+        */
         :host {
-            font-family: var(--font-family, Arial, sans-serif);
-            font-size: 0.9rem;
+            --font-family: var(--custom-font-family, 'Gotham-Medium', 'Open Sans', Arial, serif);
+            font-weight: light;
             --card-height: 15rem;
             --card-gap: 1rem;
             --main-border: solid #ccc 0.2rem;
@@ -99,12 +108,12 @@ export class WidgetElement extends LitElement {
         }
 
         * {
+            --font-family: var(--font-family);
             padding: 0;
             margin: 0;
         }
 
         button, select, input {
-            font-size: 1.1rem;
             border: var(--input-border);
             border-radius: var(--input-border-radius);
             background-color: var(--bg-color-primary, #eee);
@@ -380,6 +389,20 @@ export class WidgetElement extends LitElement {
      */
     connectedCallback(): void {
         super.connectedCallback();
+        const style = document.createElement('style');
+        style.textContent = `
+            @font-face {
+                font-family: 'Gotham';
+                src: url('./assets/fonts/Gotham-Medium.otf') format('opentype');
+                font-weight: normal;
+                font-style: normal;
+            }
+
+            :host {
+                font-family: 'Gotham', Arial, serif;
+            }
+        `;
+        this.shadowRoot.appendChild(style);
         this._TaskCategories.run();
         this._TaskCategories.taskComplete.catch((error) => {
             console.error('Failed to fetch categories:', error);

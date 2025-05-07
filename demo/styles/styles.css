@@ -1,3 +1,13 @@
+/**
+* font face from: https://developer.mozilla.org/en-US/docs/Web/CSS/@font-face
+*/
+@font-face {
+    font-family: 'Bitstream Vera Serif Bold';
+    src: url('https://mdn.github.io/shared-assets/fonts/VeraSeBd.ttf');
+    font-weight: normal;
+    font-size: normal;
+}
+
 :root {
     --color-primary: hsl(205, 20%, 35%);
     --color-secondary: hsl(205, 20%, 44%);
@@ -7,7 +17,7 @@
     --spacing-large: 1.5em;
     --spacing-medium: 0.9em;
     --spacing-small: 0.5em;
-    font-family: 'Times New Roman', Times, serif;
+    font-family: 'Bitstream Vera Serif Bold', Arial, serif;
 }
 
 h1,
