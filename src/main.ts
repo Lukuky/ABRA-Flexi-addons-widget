@@ -119,6 +119,7 @@ export class WidgetElement extends LitElement {
             --bg-color-primary: var(--custom-bg-color-primary, #fafafa);
             --bg-color-secondary: var(--custom-bg-color-secondary, #f4f4f4);
             --bg-color-interactive: var(--custom-bg-color-interactive, #ffffff);
+            --bg-color-tag: var(--custom-bg-color-tag, #c2c2c2);
             --border-primary: var(--custom-border-primary, solid #aaaaaa 0.1em);
             --border-interactive: var(--custom-border-interactive, solid #9c9c9c 0.1em);
             --border-radius-primary: var(--custom-border-radius-primary, 0.4em);
@@ -425,6 +426,31 @@ export class WidgetElement extends LitElement {
         .partner span {
             color: var(--text-color-secondary);
         }
+
+       #addonTags {
+            display: flex;
+            flex-flow: row wrap;
+            justify-content: center;
+            align-items: center;
+            gap: 0.8em;
+            padding-top: 0.5em;
+        }
+
+       #addonTags dt {
+            color: var(--text-color-secondary);
+        }
+
+       #addonTags dt:after {
+            content: ':';
+        }
+
+       #addonTags dd {
+            font-size: 0.8em;
+            padding: 0.5em;
+            border-radius: var(--border-radius-interactive);
+            background-color: var(--bg-color-tag);
+        }
+
     `;
 
     // ---------------------- STATES ---------------------- //
@@ -754,11 +780,16 @@ export class WidgetElement extends LitElement {
 
     _renderAddonTags() {
         return html`
-        <div id='addonTags'>
-            <dl>
+            <dl id='addonTags'>
                 <dt>${msg('Kategorie', { id: 'category' })}</dt>
+                ${repeat(this._selectedAddon.categories, (name) => html`
+                <dd class='tag'>${name}</dd>
+                `)}
+                <dt>${msg('Vhodné pro varianty', { id: 'for-variants' })}</dt>
+                ${repeat(this._selectedAddon.variants, (name) => html`
+                <dd class='tag'>${name}</dd>
+                `)}
             </dl>
-        </div>
         `;
 
     }
@@ -900,7 +931,7 @@ export class WidgetElement extends LitElement {
             ${this._renderHeader()}
             ${this._widgetState == 'overview'
                 ? this._renderSearchFilters()
-                : nothing
+                : this._renderAddonTags()
             }
             <div id='content' tabindex='0'>
             ${this._widgetState == 'overview'
