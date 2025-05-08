@@ -1,4 +1,4 @@
-import { LitElement, html, css, unsafeCSS } from 'lit';
+import { LitElement, html, css, nothing } from 'lit';
 import { Task } from '@lit/task';
 import { customElement, property, state } from 'lit/decorators.js';
 import { repeat } from 'lit/directives/repeat.js';
@@ -47,6 +47,13 @@ interface Category {
     active: boolean
 }
 
+interface Partner {
+    id: number,
+    logo: string,
+    name: string,
+    url: string
+}
+
 /**
  * Addons informations
  * keys from Flexibee API
@@ -55,15 +62,21 @@ interface Category {
 interface Addon {
     active: boolean,
     api: boolean,
-    backgroundColor: string,
     categories: string[],
-    code: string | null,
+    code: string,
     description: string,
     developer: string,
+    hasPrice: boolean,
     id: Number,
-    isPrivate: boolean,
+    installScript: string | null,
+    linkMore: string | null,
+    name: string,
+    partner: Partner,
     perex: string,
-    photo: URL
+    photo: URL,
+    uninstallScript: string | null,
+    variants: string[],
+    www: string | null
 }
 
 /**
@@ -97,42 +110,99 @@ export class WidgetElement extends LitElement {
         * https://github.com/lit/lit-element/issues/793
         */
         :host {
+            // customizable variables;
             --font-family: var(--custom-font-family, 'Gotham-Medium', 'Open Sans', Arial, serif);
-            font-weight: light;
-            --card-height: 15rem;
-            --card-gap: 1rem;
-            --main-border: solid #ccc 0.2rem;
-            --main-border-radius: 0.5rem;
-            --input-border: solid #666 0.1rem;
-            --input-border-radius: 0.3rem;
+            --font-size: var(--custom-font-size, 1rem);
+            --color-primary: var(--custom-color-primary, #0e5dbb);
+            --text-color-primary: var(--custom-text-color-primary, #000000);
+            --text-color-secondary: var(--custom-text-color-secondary, #6d6d70);
+            --bg-color-primary: var(--custom-bg-color-primary, #fafafa);
+            --bg-color-secondary: var(--custom-bg-color-secondary, #f4f4f4);
+            --bg-color-interactive: var(--custom-bg-color-interactive, #ffffff);
+            --border-primary: var(--custom-border-primary, solid #aaaaaa 0.1em);
+            --border-interactive: var(--custom-border-interactive, solid #9c9c9c 0.1em);
+            --border-radius-primary: var(--custom-border-radius-primary, 0.4em);
+            --border-radius-interactive: var(--custom-border-radius-interactive, 0.4em);
+            // inner variables;
+            --addon-card-gap: 1em;
+            --addon-card-height: 15em;
+            --around-gap: 0.7em;
         }
 
         * {
-            --font-family: var(--font-family);
+            font-family: var(--font-family);
+            font-weight: light;
             padding: 0;
             margin: 0;
         }
 
-        button, select, input {
-            border: var(--input-border);
-            border-radius: var(--input-border-radius);
-            background-color: var(--bg-color-primary, #eee);
-            max-width: 100%;
-            padding: 0.2em;
+        h1 {
+            font-size: 1.6em;
+            font-weight: normal;
+        }
+
+        h2 {
+            font-size: 1.3em;
+            font-weight: normal;
+        }
+
+        p, li {
+            font-weight: lighter;
+            line-height: 1.3em;
+        }
+
+        button, select, .searchWrapper, .addon {
+            font-size: 1em;
+            padding: 0.4em;
+            border: var(--border-interactive);
+            border-radius: var(--border-radius-interactive);
+            background-color: var(--bg-color-interactive);
+        }
+
+        button, select, .addon {
+            cursor: pointer;
+        }
+
+        button > img {
+            vertical-align: middle;
         }
 
         label {
-            color: black;
+            font-size: 0.7em;
         }
-        
+
         #container {
+            display: grid;
+            grid-template-columns: 1fr;
+            justify-items: stretch;
+            border: var(--border-primary);
+            border-radius: var(--border-radius-primary);
+            background-color: var(--bg-color-primary);
+            padding: var(--around-gap);
+        }
+
+        #content {
+            overflow-y: scroll;
+            height: 39.39em;
+            border: var(--border-primary);
+            border-radius: var(--border-radius-primary);
+            margin: var(--around-gap) 0;
+        }
+
+        #content.extended {
+            height: var(--max-rows, 4);
+        }
+
+        #searchFilters {
             display: flex;
-            flex-flow: column nowrap;
+            flex-flow: row wrap;
             align-items: stretch;
-            border: var(--main-border);
-            border-radius: var(--main-border-radius);
-            background-color: var(--bg-color-primary, #ddd);
-            padding: 0.5em;
+            justify-content: space-between;
+            gap: 1em;
+        }
+
+        #pager img {
+            padding: 0.2em 0.3em;
         }
 
         .panel {
@@ -142,86 +212,91 @@ export class WidgetElement extends LitElement {
             gap: 1em;
         }
 
+        .panel .left {
+            grid-column-start: 1;
+            justify-self: flex-start;
+        }
+
         .panel .centered {
             grid-column-start: 2;
-            text-align: center;
+            justify-self: center;
         }
 
-        header, footer {
-            padding: 0.3em;
-        }
-
-        #buttonBack {
-            justify-self: left;
-        }
-
-        #selectLocale {
-            justify-self: end;
-        }
-
-        #content {
-            height: calc(var(--min-rows, 2) * (var(--card-height) + var(--card-gap)) + var(--card-gap));
-            padding: var(--card-gap);
-            overflow-y: scroll;
-            border: var(--border-main);
-            background-color: var(--bg-color-main, #eee);
-        }
-
-        #content.extended {
-            height: var(--max-rows, 4);
-        }
-
-        #searchFilters {
-            grid-column-start: 1;
-            grid-column-end: 4;
-            order: 2;
-            /* position: relative; */
-            display: flex;
-            flex-flow: row wrap;
-            justify-content: space-between;
-            gap: 1em;
+        .panel .right {
+            grid-column-start: 3;
+            justify-self: flex-end;
         }
 
         .cards {
-            display: flex;
-            flex-flow: row wrap;
-            overflow-y: scroll;
-            gap: var(--card-gap);
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            justify-content: stretch;
+            align-content: start;
+            gap: var(--addon-card-gap);
+            padding: var(--addon-card-gap);
+            background-color: var(--bg-color-secondary);
+        }
+
+        @media screen and (max-width: 70em) {
+            .cards {
+                grid-template-columns: repeat(3, 1fr);
+            }
+        }
+
+        @media screen and (max-width: 50em) {
+            .cards {
+                grid-template-columns: repeat(2, 1fr);
+            }
+        }
+
+        @media screen and (max-width: 30em) {
+            .cards {
+                grid-template-columns: 1fr;
+            }
         }
 
         .addon {
+            position: relative;
             display: flex;
             flex-flow: column nowrap;
             align-items: center;
             flex-grow: 1;
             text-align: center;
-            gap: var(--card-gap);
-            width: 13em;
-            height: var(--card-height);
-            padding: 1em;
-            background-color: #fff;
+            gap: 0.6em;
+            height: var(--addon-card-height);
+            padding: 1.5em;
+            background-color: var(--bg-color-interactive);
             box-shadow: none;
             transition: box-shadow 0.2s ease-in;
             cursor: pointer;
         }
 
         .addon:hover {
-            box-shadow: 0 0 1em #bbb;
+            box-shadow: 0 0.5em 1em #bbb;
         }
 
         .addon img {
             object-fit: contain;
-            max-width: 80%;
-            height: 4em;
+            max-width: 70%;
+            height: 3em;
         }
-        .addon p {
+
+        .addon .addonPerex {
             overflow-y: hidden;
         }
 
+        .addon .addonNote {
+            position: absolute;
+            bottom: 1em;
+            width: 100%;
+            padding-top: 3em;
+            color: var(--text-color-secondary);
+            /* background-color: var(--bg-color-interactive); */
+            background: linear-gradient(to bottom, rgba(255, 255, 255, 0), var(--bg-color-interactive), var(--bg-color-interactive));
+        }
+
         .loading {
-            h1, h2, h3, p {
-                filter: blur(0.5em);
-            }
+            justify-content: center;
         }
 
         .loading:hover {
@@ -229,13 +304,31 @@ export class WidgetElement extends LitElement {
             cursor: progress;
         }
 
-        .addon addons-loader {
+        .loading addons-loader {
             --size: 3em;
-            margin: 0.5em;
+            --main-color: var(--color-primary);
+        }
+
+        .detail {
+            display: flex;
+            flex-flow: column;
+            align-content: center;
+            max-width: 50em;
+            padding: 2em;
+            margin: 0 auto;
+        }
+        
+        .detail > * {
+            grid-column: 2;
         }
 
         .detail h2 {
             padding: 1em 0 0.5em 0;
+        }
+
+        .detail p,
+        .detail ul {
+            padding-bottom: 1em;
         }
 
         .detail li {
@@ -243,8 +336,88 @@ export class WidgetElement extends LitElement {
         }
 
         .detail img {
-            max-width: 100%;
-            margin: 0.5em;
+            max-width: 90%;
+            margin: 0.5em 0;
+        }
+
+        .detail .perex {
+            color: var(--text-color-secondary);
+        }
+
+        .banner {
+            align-content: center;
+            text-align: center;
+            width: 100%;
+            height: 100%;
+        }
+
+        .btnEmpty {
+            color: var(--color-primary);
+            border-color: var(--color-primary);
+        }
+
+        .btnFull {
+            color: var(--bg-color-interactive);
+            background-color: var(--color-primary);
+            border-color: var(--color-primary);
+        }
+
+        .selectWrapper {
+            position: relative;
+        }
+
+        label {
+            position: absolute;
+            left: 1em;
+            top: -0.8em;
+            padding: 0 0.3em;
+            background-color: var(--bg-color-interactive);
+        }
+
+        .searchWrapper {
+            position: relative;
+            display: flex;
+            flex-flow: row nowrap;
+            align-items: stretch;
+            gap: 0.2em;
+            padding: 0;
+            background-color: var(--bg-color-interactive);
+        }
+
+        .searchWrapper > input {
+            font-size: 1em;
+            width: 9em;
+            padding: 0 0.2em;
+            border: none;
+            background-color: none;
+        }
+
+        .searchWrapper:focus {
+            border: none;
+        }
+
+        .searchWrapper > button {
+            padding: 0.3em;
+            border: none;
+        }
+
+        .searchWrapper img {
+            height: 1.5em;
+        }
+
+        .partner {
+            display: flex;
+            flex-flow: row wrap;
+            align-items: center;
+            gap: 1em;
+        }
+
+        .partner > img {
+            height: 1.5em;
+        }
+
+        .partner span {
+            color: var(--text-color-secondary);
         }
     `;
 
@@ -374,7 +547,7 @@ export class WidgetElement extends LitElement {
             const data: AddonsSearch = await response.json() as AddonsSearch;
             this._addonsTotalPages = data.totalPages;
             this._currentAddons = data.content;
-
+            console.log(data);
             return data;
         },
 
@@ -389,20 +562,7 @@ export class WidgetElement extends LitElement {
      */
     connectedCallback(): void {
         super.connectedCallback();
-        const style = document.createElement('style');
-        style.textContent = `
-            @font-face {
-                font-family: 'Gotham';
-                src: url('./assets/fonts/Gotham-Medium.otf') format('opentype');
-                font-weight: normal;
-                font-style: normal;
-            }
 
-            :host {
-                font-family: 'Gotham', Arial, serif;
-            }
-        `;
-        this.shadowRoot.appendChild(style);
         this._TaskCategories.run();
         this._TaskCategories.taskComplete.catch((error) => {
             console.error('Failed to fetch categories:', error);
@@ -462,11 +622,18 @@ export class WidgetElement extends LitElement {
      * Used for unify descriptions and perexes from Flexibee API
      * @param element root of DOM subtree to have removed styles
      */
-    _removeStyles(element: HTMLElement): void {
+    _removeRedundantHTML(element: HTMLElement): void {
+        Array.from(element.getElementsByClassName('icon')).forEach(icon => icon.parentNode?.removeChild(icon));
+        Array.from(element.getElementsByTagName('br')).forEach(br => br.parentNode?.removeChild(br));
         Array.from(element.getElementsByTagName('style')).forEach(style => style.parentNode?.removeChild(style));
         Array.from(element.getElementsByTagName('*')).forEach(element => {
             element.removeAttribute("style");
             element.removeAttribute("color");
+        });
+        Array.from(element.getElementsByTagName('p')).forEach(paragraph => {
+            if (!paragraph.textContent?.trim() && paragraph.children.length === 0) {
+                paragraph.parentNode?.removeChild(paragraph);
+            }
         });
     }
 
@@ -477,8 +644,9 @@ export class WidgetElement extends LitElement {
      */
     _retrievePerex(addon: Addon) {
         const perex = document.createElement('p');
+        perex.classList.add('addonPerex');
         perex.innerHTML = addon.perex;
-        this._removeStyles(perex);
+        this._removeRedundantHTML(perex);
         return perex;
     }
 
@@ -506,6 +674,20 @@ export class WidgetElement extends LitElement {
         }
     }
 
+    _getAddonPhoto(addon: Addon): string {
+        if (addon.photo) {
+            return addon.photo.toString();
+        }
+        return new URL('./assets/addon.svg', import.meta.url).toString();
+    }
+
+    _createAbsoluteLink(url: string) {
+        if (url.startsWith('http://') || url.startsWith('https://')) {
+            return url;
+        }
+        return `https://${url}`
+    }
+
     // ---------------------- RENDERING ---------------------- //
     /**
      * Compose header of the component for both widget states
@@ -516,32 +698,12 @@ export class WidgetElement extends LitElement {
             <header class="panel">
                 ${this._widgetState == 'detail'
                 ? html`
-                <button id="buttonBack" @click="${this._goBack}">${msg("Zpět", { id: "buttonBack" })}</button>
-                <h1 class='centered'>Název doplňku</h1>
+                <button id="button-back" class='btnEmpty left' @click="${this._goBack}">${msg("Zpět na přehled", { id: "buttonBack" })}</button>
+                <h1 class='centered'>${this._selectedAddon.name}</h1>
                 `
                 : html`
                 <h1 class='centered'>${msg('Doplňky ABRA Flexi', { id: 'title' })}</h1>
-                <div id='searchFilters'>
-                    <label for='selectCategory'>${msg("Kategorie", { id: "labelCategory" })}
-                        <select id='selectCategory' @change="${this._updateCategory}">
-                            <option value="">--${msg("Všechny", { id: "optionAll" })}--</option>
-                    ${this._categories.map((category) => {
-                    return html`
-                        <option value="${category.id}" ?selected="${category.id === this._selectedCategory}">${this._localeCategoryName(category)}</option>
-                    `;
-                })}
-                        </select>
-                    </label>
-                    <div>
-                        <label>${msg("Vyhledat", { id: "labelSearch" })}
-                            <input type="text" id="search" value="${this._searchPhrase}" @keydown="${this._searchOnEnter}"/>
-                        </label>
-                        <button @click="${this._resetSearch}">${msg("Reset", { id: "buttonResetSearch" })}</button>
-                        <button @click="${this._search}">${msg("Vyhledat", { id: "buttonSearch" })}</button>
-                    </div>
-                </div>
-                `}
-                <label id="selectLocale">${msg("Jazyk", { id: "labelLanguage" })}
+                <!-- <label id="selectLocale">${msg("Jazyk", { id: "labelLanguage" })}
                     <select @change=${this._localeChanged}>
                         ${allLocales.map((locale) => html`
                             <option .value=${locale} ?selected=${locale === this._selectedLocale}>
@@ -549,27 +711,50 @@ export class WidgetElement extends LitElement {
                             </option>`
                 )}
                     </select>
-                </label>
+                </label> -->
+                `}
             </header>
         `;
     }
 
-    /**
-     * Render component content in pseudo-state of loading fetching addons
-     * Composed to have layout style same as result
-     * @returns #content with addons "empty" cards
-     */
-    _renderPreview() {
+    _renderSearchFilters() {
         return html`
-        <div id='content' class='cards' tabindex='0'>
-            ${Array.from({ length: this.addonsPerPage }, (_, i) => html`
-                <article class='addon loading'>
-                    <addons-loader></addons-loader>
-                    <h2>Doplněk ABRA Flexi</h2>
-                    <p>Lorem ipsum dolor sit amet. Lorem ipsum dolor sit amet.</p>
-                </article>
-            `)}
-        </div>`;
+        <div id='searchFilters'>
+            <div class="selectWrapper">
+                <label for='selectCategory'>${msg("Kategorie", { id: "labelCategory" })}</label>
+                <select id='selectCategory' @change="${this._updateCategory}">
+                    <option value="">--${msg("Všechny", { id: "optionAll" })}--</option>
+        ${this._categories.map((category) => {
+            return html`
+                <option value="${category.id}" ?selected="${category.id === this._selectedCategory}">${this._localeCategoryName(category)}</option>
+            `;
+        })}
+                </select>
+            </div>
+            <div class='searchWrapper'>
+                <button @click="${this._search}">
+                    <img src='${new URL('./assets/search.svg', import.meta.url).toString()}'>
+                </button>
+                <label for='search'>${msg("Vyhledat", { id: "labelSearch" })}</label>
+                <input type="text" id="search" value="${this._searchPhrase}" @keydown="${this._searchOnEnter}"/>
+                <button @click="${this._resetSearch}">
+                    <img src='${new URL('./assets/cross.svg', import.meta.url).toString()}'>
+                </button>
+            </div>
+        </div>
+        `;
+
+    }
+
+    _renderAddonTags() {
+        return html`
+        <div id='addonTags'>
+            <dl>
+                <dt>${msg('Kategorie', { id: 'category' })}</dt>
+            </dl>
+        </div>
+        `;
+
     }
 
     /**
@@ -578,18 +763,42 @@ export class WidgetElement extends LitElement {
      * @returns #content with addon cards
      */
     _renderOverview() {
-        return html`
-        <div id='content' class='cards' tabindex='0'>
-        ${repeat(this._currentAddons, (addon) => addon.id, (addon) => html`
-            <a class='addon' tabindex='0' @click="${() => this._goToDetail(addon)}">
-                <article>
-                    <image src='${addon.photo.toString()}'></image>
-                    <h2>Název doplňku</h2>
-                    ${this._retrievePerex(addon)}
-                </article>
-            </a>
-            `)}
-        </div>`;
+        return this._addons.render({
+            pending: () => html`
+            <div class='cards'>
+                ${Array.from({ length: this.addonsPerPage }, (_, i) => html`
+                    <article class='addon loading'>
+                        <addons-loader></addons-loader>
+                    </article>
+                `)}
+            </div>`,
+            complete: () => html`
+            <div class='cards'>
+                ${repeat(this._currentAddons, (addon) => addon.id, (addon) => html`
+                    <article class='addon' tabindex='0' @click="${() => this._goToDetail(addon)}">
+                        <img src='${this._getAddonPhoto(addon)}'>
+                        <h2>${addon.name}</h2>
+                ${this._retrievePerex(addon)}
+                    <span class='addonNote'>
+                ${addon.hasPrice
+                    ? html`
+                        ${msg('Zpoplatněno', { id: 'paid' })}
+                    `
+                    : html`
+                        ${msg('Zdarma', { id: 'free' })}
+                    `
+                }
+                    </span>
+                    </article>
+                `)}
+            </div>`,
+            error: () => html`
+                <div class='banner'>
+                    <p>${msg('Nastala chyba, doplňky se nepodařilo načíst.', { id: 'error-addon-fetch' })}</p>
+                    <button class='btnEmpty' @click='${this.requestUpdate}'>${msg('Zkusit znovu', { id: 'try-again' })}</button>
+                </div>
+            `,
+        })
     }
 
     /**
@@ -597,12 +806,11 @@ export class WidgetElement extends LitElement {
      * @returns style unified description of addon
      */
     _renderDetail() {
-        const newContent = document.createElement('div');
-        newContent.id = 'content';
-        newContent.classList.add('detail');
-        newContent.innerHTML = this._selectedAddon.description;
-        this._removeStyles(newContent);
-        return newContent;
+        const detail = document.createElement('div');
+        detail.classList.add('detail');
+        detail.innerHTML = this._selectedAddon.description;
+        this._removeRedundantHTML(detail);
+        return detail;
     }
 
     /**
@@ -611,23 +819,56 @@ export class WidgetElement extends LitElement {
      */
     _renderFooter() {
         return html`
-        <footer class="panel">
-                ${this._widgetState == 'detail'
-                // <image src='${this._selectedAddon.photo.toString()}'></image>
+            <footer class="panel">
+            ${this._widgetState == 'detail'
                 ? html`
-                <button class="centered" @click="${() => { }}">${msg('Instalovat', { id: 'install' })}</button>
-                `
+                        ${this._selectedAddon.partner
+                        ? html`
+                            <div class='partner left'>
+                                <img src='${this._selectedAddon.partner.logo}'>
+                                ${this._selectedAddon.partner.url
+                                ? html`
+                                    <a href="${this._createAbsoluteLink(this._selectedAddon.partner.url)}" target="_blank">
+                                        <span>${this._selectedAddon.partner.name}</span>
+                                    </a>
+                                `
+                                : html`<span>${this._selectedAddon.partner.name}</span>`}
+                            </div>
+                        `
+                        : nothing}
+                        ${this._selectedAddon.linkMore
+                        ? html`
+                            <a class="centered" href="${this._createAbsoluteLink(this._selectedAddon.linkMore)}" target="_blank">
+                                <button class="btnEmpty" > ${msg('Zjistit více', { id: 'more-info' })} </button>
+                            </a>
+                        `
+                        : nothing}
+                        ${this._selectedAddon.installScript
+                        ? html`
+                            <button class="btnFull right" @click="${() => { }}" > ${msg('Instalovat', { id: 'install' })} </button>
+                        `
+                        : nothing}
+                        `
                 : html`
-                <div class="panel centered">
-                    ${this._addonsPageNum == 0 ? `` : html`<button @click="${() => this._addonsPageNum--}"> < </button>`}
-                    <div class="centered">
-                        ${this._addonsPageNum + 1}/${this._addonsTotalPages}
+                    <div id = 'pager' class="panel centered" ?visible = "${this._addonsTotalPages == 0}" >
+                        <button @click="${() => this._addonsPageNum--}" ?hidden = "${this._addonsPageNum == 0}" >
+                            <img src='${new URL('./assets/arrow-left.svg', import.meta.url).toString()}' >
+                        </button>
+                    ${this._addonsTotalPages > 0
+                        ? html`
+                        <div class="centered">
+                            ${this._addonsPageNum + 1}/${this._addonsTotalPages}
+                        </div>
+                        `
+                        : nothing}
+                        <button @click="${() => this._addonsPageNum++}" ?hidden = "${this._addonsPageNum + 1 >= this._addonsTotalPages}" >
+                            <img src='${new URL('./assets/arrow-right.svg', import.meta.url).toString()}' >
+                        </button>
                     </div>
-                    ${this._addonsPageNum + 1 < this._addonsTotalPages ? html`<button @click="${() => this._addonsPageNum++}"> > </button>` : ""}
-                </div>
-                `
+                    `
             }
-        </footer>`;
+            </footer>
+        `;
     }
 
     /**
@@ -641,16 +882,16 @@ export class WidgetElement extends LitElement {
         <div id='container'>
             ${this._renderHeader()}
             ${this._widgetState == 'overview'
-                ? this._addons.render({
-                    initial: () => html`<p>Waiting to start task</p>`,
-                    pending: () => this._renderPreview(),
-                    complete: () => this._renderOverview(),
-                    error: (error) => html`<p>Oops, something went wrong: ${error}</p>`,
-                })
+                ? this._renderSearchFilters()
+                : nothing
+            }
+            <div id='content' tabindex='0'>
+            ${this._widgetState == 'overview'
+                ? this._renderOverview()
                 : this._renderDetail()
             }
+            </div>
             ${this._renderFooter()}
-        <slot></slot>
         </div>`;
     }
 }
