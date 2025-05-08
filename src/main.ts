@@ -198,6 +198,7 @@ export class WidgetElement extends LitElement {
             flex-flow: row wrap;
             align-items: stretch;
             justify-content: space-between;
+            padding-top: 1em;
             gap: 1em;
         }
 
@@ -345,10 +346,15 @@ export class WidgetElement extends LitElement {
         }
 
         .banner {
+            display: flex;
+            flex-direction: column;
             align-content: center;
+            align-items: center;
+            justify-content: center;
             text-align: center;
             width: 100%;
             height: 100%;
+            gap: 0.5em;
         }
 
         .btnEmpty {
@@ -773,29 +779,40 @@ export class WidgetElement extends LitElement {
                 `)}
             </div>`,
             complete: () => html`
-            <div class='cards'>
-                ${repeat(this._currentAddons, (addon) => addon.id, (addon) => html`
-                    <article class='addon' tabindex='0' @click="${() => this._goToDetail(addon)}">
-                        <img src='${this._getAddonPhoto(addon)}'>
-                        <h2>${addon.name}</h2>
-                ${this._retrievePerex(addon)}
-                    <span class='addonNote'>
-                ${addon.hasPrice
+            ${this._currentAddons.length > 0
                     ? html`
-                        ${msg('Zpoplatněno', { id: 'paid' })}
-                    `
-                    : html`
-                        ${msg('Zdarma', { id: 'free' })}
-                    `
-                }
-                    </span>
-                    </article>
+                <div class='cards'>
+                ${repeat(this._currentAddons, (addon) => addon.id, (addon) => html`
+                <article class='addon' tabindex='0' @click="${() => this._goToDetail(addon)}">
+                    <img src='${this._getAddonPhoto(addon)}'>
+                    <h2>${addon.name}</h2>
+                    ${this._retrievePerex(addon)}
+                        <span class='addonNote'>
+                        ${addon.hasPrice
+                            ? html`
+                            ${msg('Zpoplatněno', { id: 'paid' })}
+                        `
+                            : html`
+                            ${msg('Zdarma', { id: 'free' })}
+                        `
+                        }
+                </span>
+                </article>
                 `)}
-            </div>`,
+                </div>`
+                    : html`
+                    <div class='banner'>
+                        <p>${msg('Nebyl nalezen žádný doplněk.', { id: 'error-addon-search' })}</p>
+                        <button class='btnEmpty' @click='${this._resetSearch}'>${msg('Zobrazit všechny', { id: 'show-all' })}</button>
+                    </div>
+            `}
+            `,
             error: () => html`
                 <div class='banner'>
                     <p>${msg('Nastala chyba, doplňky se nepodařilo načíst.', { id: 'error-addon-fetch' })}</p>
-                    <button class='btnEmpty' @click='${this.requestUpdate}'>${msg('Zkusit znovu', { id: 'try-again' })}</button>
+                    <a href=''>
+                        <button class='btnEmpty' @click='${this.requestUpdate}'>${msg('Zkusit znovu', { id: 'try-again' })}</button>
+                    </a>
                 </div>
             `,
         })
