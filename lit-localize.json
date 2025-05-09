@@ -10,8 +10,8 @@
     "output": {
         "mode": "runtime",
         "outputDir": "./src/generated/locales",
-        "localeCodesModule": "./src/generated/locale-codes.js",
-        "language": "js"
+        "localeCodesModule": "./src/generated/locale-codes.ts",
+        "language": "ts"
     },
     "interchange": {
         "format": "xliff",

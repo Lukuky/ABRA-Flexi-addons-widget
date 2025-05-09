@@ -11,7 +11,7 @@
   <target>Installieren</target>
 </trans-unit>
 <trans-unit id="buttonBack">
-  <source>Zpět</source>
+  <source>Zpět na přehled</source>
   <target>Zurück</target>
 </trans-unit>
 <trans-unit id="labelCategory">
@@ -26,17 +26,36 @@
   <source>Vyhledat</source>
   <target>Suchen</target>
 </trans-unit>
-<trans-unit id="buttonResetSearch">
-  <source>Reset</source>
-  <target>Zurücksetzen</target>
-</trans-unit>
-<trans-unit id="buttonSearch">
-  <source>Vyhledat</source>
-  <target>Suchen</target>
-</trans-unit>
 <trans-unit id="labelLanguage">
   <source>Jazyk</source>
   <target>Sprache</target>
+</trans-unit>
+<trans-unit id="category">
+  <source>Kategorie</source>
+</trans-unit>
+<trans-unit id="for-variants">
+  <source>Vhodné pro varianty</source>
+</trans-unit>
+<trans-unit id="paid">
+  <source>Zpoplatněno</source>
+</trans-unit>
+<trans-unit id="free">
+  <source>Zdarma</source>
+</trans-unit>
+<trans-unit id="error-addon-search">
+  <source>Nebyl nalezen žádný doplněk.</source>
+</trans-unit>
+<trans-unit id="show-all">
+  <source>Zobrazit všechny</source>
+</trans-unit>
+<trans-unit id="error-addon-fetch">
+  <source>Nastala chyba, doplňky se nepodařilo načíst.</source>
+</trans-unit>
+<trans-unit id="try-again">
+  <source>Zkusit znovu</source>
+</trans-unit>
+<trans-unit id="more-info">
+  <source>Zjistit více</source>
 </trans-unit>
 </body>
 </file>

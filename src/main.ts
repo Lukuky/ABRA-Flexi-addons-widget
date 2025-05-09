@@ -4,18 +4,23 @@ import { customElement, property, state } from 'lit/decorators.js';
 import { repeat } from 'lit/directives/repeat.js';
 import { msg, localized } from '@lit/localize';
 import { configureLocalization } from '@lit/localize';
-import { sourceLocale, targetLocales, allLocales } from './generated/locale-codes.js';
 
-import './loader.ts';
-
+import { svgAddon, svgArrowLeft, svgArrowRight, svgCross, svgSearch } from './assets';
+import { sourceLocale, targetLocales, allLocales } from './generated/locale-codes';
+import './loader';
 /**
  * Pre-rendering localizations
  * Specified in locale-codes.js generated from lit-localize.json
  */
-const localizedTemplates = new Map(
-    targetLocales.map((locale) => [locale, import(`./generated/locales/${locale}.js`)])
+import { templates as deTemplates } from './generated/locales/de';
+import { templates as enTemplates } from './generated/locales/en';
+import { templates as skTemplates } from './generated/locales/sk';
 
-);
+const localizedTemplates = new Map([
+    ['de', deTemplates],
+    ['en', enTemplates],
+    ['sk', skTemplates]
+]);
 
 /**
  * Configure localization
@@ -24,7 +29,10 @@ const localizedTemplates = new Map(
 const { getLocale, setLocale } = configureLocalization({
     sourceLocale,
     targetLocales,
-    loadLocale: async (locale: "de" | "en" | "sk") => localizedTemplates.get(locale),
+    loadLocale: async (locale: "de" | "en" | "sk") => {
+        const templates = localizedTemplates.get(locale);
+        return { templates };
+    },
 });
 
 /**
@@ -730,21 +738,22 @@ export class WidgetElement extends LitElement {
             <header class="panel">
                 ${this._widgetState == 'detail'
                 ? html`
-                <button id="button-back" class='btnEmpty left' @click="${this._goBack}">${msg("Zpět na přehled", { id: "buttonBack" })}</button>
+                <button class='btnEmpty left' @click="${this._goBack}">${msg("Zpět na přehled", { id: "buttonBack" })}</button>
                 <h1 class='centered'>${this._selectedAddon.name}</h1>
                 `
                 : html`
                 <h1 class='centered'>${msg('Doplňky ABRA Flexi', { id: 'title' })}</h1>
-                <!-- <label id="selectLocale">${msg("Jazyk", { id: "labelLanguage" })}
-                    <select @change=${this._localeChanged}>
+                `}
+                <div class="selectWrapper right">
+                    <label id="selectLocale">${msg("Jazyk", { id: "labelLanguage" })}</label>
+                    <select id='selectLocale' @change="${this._localeChanged}">
                         ${allLocales.map((locale) => html`
                             <option .value=${locale} ?selected=${locale === this._selectedLocale}>
                                 ${locale}
                             </option>`
                 )}
                     </select>
-                </label> -->
-                `}
+                </div>
             </header>
         `;
     }

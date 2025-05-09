@@ -10,13 +10,20 @@
 
     export const templates = {
       'buttonBack': `Späť`,
-'buttonResetSearch': `Reset`,
-'buttonSearch': `Hľadanie`,
 'install': `Inštalovať`,
 'labelCategory': `Kategória`,
 'labelLanguage': `Jazyk`,
 'labelSearch': `Hľadanie`,
 'optionAll': `Všetko`,
 'title': `Doplnky ABRA Flexi`,
+'category': `Kategorie`,
+'for-variants': `Vhodné pro varianty`,
+'paid': `Zpoplatněno`,
+'free': `Zdarma`,
+'error-addon-search': `Nebyl nalezen žádný doplněk.`,
+'show-all': `Zobrazit všechny`,
+'error-addon-fetch': `Nastala chyba, doplňky se nepodařilo načíst.`,
+'try-again': `Zkusit znovu`,
+'more-info': `Zjistit více`,
     };
   
