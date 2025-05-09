@@ -46,7 +46,7 @@
   "main": "./dist/addons-widget.js",
   "repository": {
     "type": "git",
-    "url": "https://github.com/Lukuky/ABRA-Flexi-addons-widget"
+    "url": "git+https://github.com/Lukuky/ABRA-Flexi-addons-widget.git"
   },
   "version": "0.1.0",
   "keywords": [
@@ -61,5 +61,8 @@
   "engines": {
     "node": ">=23.11.0",
     "npm": ">=10.9.2"
+  },
+  "publishConfig": {
+    "registry": "https://registry.npmjs.org/"
   }
 }
