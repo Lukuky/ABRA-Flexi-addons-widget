@@ -127,11 +127,12 @@ export class WidgetElement extends LitElement {
             --bg-color-primary: var(--custom-bg-color-primary, #fafafa);
             --bg-color-secondary: var(--custom-bg-color-secondary, #f4f4f4);
             --bg-color-interactive: var(--custom-bg-color-interactive, #ffffff);
-            --bg-color-tag: var(--custom-bg-color-tag, #c2c2c2);
+            --bg-color-tag: var(--custom-bg-color-tag, #dbdbdb);
             --border-primary: var(--custom-border-primary, solid #aaaaaa 0.1em);
             --border-interactive: var(--custom-border-interactive, solid #9c9c9c 0.1em);
             --border-radius-primary: var(--custom-border-radius-primary, 0.4em);
             --border-radius-interactive: var(--custom-border-radius-interactive, 0.4em);
+            --icons-color: var(--custom-bg-color-tag, var(--text-color-secondary));
             // inner variables;
             --addon-card-gap: 1em;
             --addon-card-height: 15em;
@@ -172,12 +173,20 @@ export class WidgetElement extends LitElement {
             cursor: pointer;
         }
 
-        button > img {
+        button > svg {
             vertical-align: middle;
         }
 
         label {
             font-size: 0.7em;
+        }
+
+        svg path {
+            stroke: var(--icons-color);
+        }
+
+        select {
+            min-width: 6em;
         }
 
         #container {
@@ -211,7 +220,7 @@ export class WidgetElement extends LitElement {
             gap: 1em;
         }
 
-        #pager img {
+        #pager svg {
             padding: 0.2em 0.3em;
         }
 
@@ -285,10 +294,15 @@ export class WidgetElement extends LitElement {
             box-shadow: 0 0.5em 1em #bbb;
         }
 
-        .addon img {
+        .addon img,
+        .addon svg {
             object-fit: contain;
             max-width: 70%;
             height: 3em;
+        }
+
+        .addon svg path {
+            stroke: var(--text-color-primary);
         }
 
         .addon .addonPerex {
@@ -416,7 +430,7 @@ export class WidgetElement extends LitElement {
             border: none;
         }
 
-        .searchWrapper img {
+        .searchWrapper svg {
             height: 1.5em;
         }
 
@@ -714,13 +728,6 @@ export class WidgetElement extends LitElement {
         }
     }
 
-    _getAddonPhoto(addon: Addon): string {
-        if (addon.photo) {
-            return addon.photo.toString();
-        }
-        return new URL('./assets/addon.svg', import.meta.url).toString();
-    }
-
     _createAbsoluteLink(url: string) {
         if (url.startsWith('http://') || url.startsWith('https://')) {
             return url;
@@ -774,12 +781,12 @@ export class WidgetElement extends LitElement {
             </div>
             <div class='searchWrapper'>
                 <button @click="${this._search}">
-                    <img src='${new URL('./assets/search.svg', import.meta.url).toString()}'>
+                    ${svgSearch()}
                 </button>
                 <label for='search'>${msg("Vyhledat", { id: "labelSearch" })}</label>
                 <input type="text" id="search" value="${this._searchPhrase}" @keydown="${this._searchOnEnter}"/>
                 <button @click="${this._resetSearch}">
-                    <img src='${new URL('./assets/cross.svg', import.meta.url).toString()}'>
+                    ${svgCross()}
                 </button>
             </div>
         </div>
@@ -824,7 +831,10 @@ export class WidgetElement extends LitElement {
                 <div class='cards'>
                 ${repeat(this._currentAddons, (addon) => addon.id, (addon) => html`
                 <article class='addon' tabindex='0' @click="${() => this._goToDetail(addon)}">
-                    <img src='${this._getAddonPhoto(addon)}'>
+                    ${addon.photo
+                            ? html`<img src='${addon.photo.toString()}'>`
+                            : svgAddon()
+                        }
                     <h2>${addon.name}</h2>
                     ${this._retrievePerex(addon)}
                         <span class='addonNote'>
@@ -909,7 +919,7 @@ export class WidgetElement extends LitElement {
                 : html`
                     <div id = 'pager' class="panel centered" ?visible = "${this._addonsTotalPages == 0}" >
                         <button @click="${() => this._addonsPageNum--}" ?hidden = "${this._addonsPageNum == 0}" >
-                            <img src='${new URL('./assets/arrow-left.svg', import.meta.url).toString()}' >
+                            ${svgArrowLeft()}
                         </button>
                     ${this._addonsTotalPages > 0
                         ? html`
@@ -919,7 +929,7 @@ export class WidgetElement extends LitElement {
                         `
                         : nothing}
                         <button @click="${() => this._addonsPageNum++}" ?hidden = "${this._addonsPageNum + 1 >= this._addonsTotalPages}" >
-                            <img src='${new URL('./assets/arrow-right.svg', import.meta.url).toString()}' >
+                            ${svgArrowRight()}
                         </button>
                     </div>
                     `
