@@ -2,8 +2,6 @@
 node_modules/
 
 # Generated
-.vscode
+coverage/
 dist/
 wiki/
-thirdPartyNotice.json
-coverage/

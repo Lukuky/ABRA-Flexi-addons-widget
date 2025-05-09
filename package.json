@@ -21,7 +21,6 @@
     "html-webpack-plugin": "^5.6.3",
     "mocha": "^11.1.0",
     "style-loader": "^4.0.0",
-    "terser-webpack-plugin": "^5.3.14",
     "to-string-loader": "^1.2.0",
     "ts-loader": "^9.5.2",
     "ts-node": "^10.9.2",
@@ -53,7 +52,8 @@
   "keywords": [
     "widget",
     "web component",
-    "ABRA Flexi"
+    "ABRA Flexi",
+    "Lit"
   ],
   "author": "Lukáš Hubač",
   "license": "MIT",
