@@ -1,15 +1,13 @@
-# https://github.com/rhea-so/tsdoc-github-wiki-example
-
-name: Sync GitHub Wiki
+name: CI/CD Workflow
 
 on:
   push:
-    branches: develop
+    branches:
+      - develop
+      - main
 
 jobs:
-  localize-build-test-docs:
-    permissions:
-      contents: write
+  setup:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
@@ -33,20 +31,144 @@ jobs:
         if: steps.cache.outputs.cache-hit != 'true'
         run: npm ci
 
-      - name: Localize
-        run: npm run localize
+      - name: Save Cache State
+        run: echo "CACHE_HIT=${{ steps.cache.outputs.cache-hit }}" >> $GITHUB_ENV
+
+  build:
+    needs: setup
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Setup Node.js
+        uses: actions/setup-node@main
+        with:
+          node-version: 23
+
+      - name: Cache Dependencies
+        uses: actions/cache@main
+        with:
+          key: ${{ hashFiles('package-lock.json') }}
+          path: "node_modules"
+
+      - name: Install Dependencies
+        if: env.CACHE_HIT != 'true'
+        run: npm ci
 
       - name: Build
         run: npm run build
 
-      - name: Test
-      # https://playwright.dev/docs/ci-intro
-        run: npx playwright install --with-deps && npm run test
+      - name: Upload Build Artifact
+        uses: actions/upload-artifact@v3
+        with:
+          name: dist
+          path: ./dist
 
-      - name: Docs
+  # https://github.com/rhea-so/tsdoc-github-wiki-example
+  docs:
+    needs: setup
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Setup Node.js
+        uses: actions/setup-node@main
+        with:
+          node-version: 23
+
+      - name: Cache Dependencies
+        uses: actions/cache@main
+        with:
+          key: ${{ hashFiles('package-lock.json') }}
+          path: "node_modules"
+
+      - name: Install Dependencies
+        if: env.CACHE_HIT != 'true'
+        run: npm ci
+
+      - name: Generate Docs
         run: npm run docs
 
-      - name: GitHub Wiki
+      - name: Sync GitHub Wiki
+        if: github.ref_name == 'develop'
         uses: spenserblack/actions-wiki@main
         with:
           path: wiki
+
+  test:
+    needs: build
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Setup Node.js
+        uses: actions/setup-node@main
+        with:
+          node-version: 23
+
+      - name: Cache Dependencies
+        uses: actions/cache@main
+        with:
+          key: ${{ hashFiles('package-lock.json') }}
+          path: "node_modules"
+
+      - name: Install Dependencies
+        if: env.CACHE_HIT != 'true'
+        run: npm ci
+
+      - name: Install Playwright
+        run: npx playwright install --with-deps
+
+      - name: Run Tests
+        run: npm run test
+
+  publish:
+    needs: test
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Setup Node.js
+        uses: actions/setup-node@main
+        with:
+          node-version: 23
+
+      - name: Cache Dependencies
+        uses: actions/cache@main
+        with:
+          key: ${{ hashFiles('package-lock.json') }}
+          path: "node_modules"
+
+      - name: Install Dependencies
+        if: env.CACHE_HIT != 'true'
+        run: npm ci
+
+      - name: Download Build Artifact
+        uses: actions/download-artifact@v3
+        with:
+          name: dist
+
+      - name: Deploy to GitHub Pages
+        uses: peaceiris/actions-gh-pages@v3
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          publish_dir: ./dist
+
+      - name: Publish to NPM
+        env:
+          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
+        run: |
+          cd dist
+          npm publish
