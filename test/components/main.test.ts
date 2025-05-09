@@ -1,7 +1,6 @@
 import { fixture, html, expect } from '@open-wc/testing';
 import { fetchMockSuccess, fetchMockError, resetFetchMock } from '../mocks/fetch';
-import { WidgetElement } from '../../src/components/main';
-import '../../src/components/main.ts';
+import '../../src/main';
 
 
 describe('Overview', () => {
@@ -10,17 +9,22 @@ describe('Overview', () => {
     });
 
     after(() => {
-        fetchMockError();
+        resetFetchMock();
     });
 
     it('Layout', async () => {
         const widget = await fixture(html`<addons-widget></addons-widget>`);
-        widget.shadowRoot.querySelector('header');
+        const header = widget.shadowRoot.querySelector('header');
+        expect(header).to.exist;
+        const content = widget.shadowRoot.querySelector('#content');
+        expect(content).to.exist;
+        const footer = widget.shadowRoot.querySelector('footer');
+        expect(footer).to.exist;
     });
     it('Fetch categories', async () => {
-        let widget = await fixture(html`<addons-widget></addons-widget>`) as WidgetElement;
+        let widget = await fixture(html`<addons-widget></addons-widget>`);
 
-        await widget._TaskCategories.taskComplete;
+        await new Promise(resolve => setTimeout(resolve, 1000));
 
         const selectCategory = widget.shadowRoot.querySelector('#selectCategory') as HTMLSelectElement;
         expect(selectCategory).to.exist;
