@@ -69,6 +69,8 @@ jobs:
 
   # https://github.com/rhea-so/tsdoc-github-wiki-example
   docs:
+    permissions:
+      contents: write
     needs: setup
     runs-on: ubuntu-latest
     steps:
@@ -96,7 +98,6 @@ jobs:
         run: npm run docs
 
       - name: Sync GitHub Wiki
-        if: github.ref_name == 'develop'
         uses: spenserblack/actions-wiki@main
         with:
           path: wiki
@@ -132,6 +133,8 @@ jobs:
         run: npm run test
 
   publish:
+    permissions:
+      contents: write
     needs: test
     runs-on: ubuntu-latest
     steps:
@@ -163,7 +166,6 @@ jobs:
       - name: Deploy to GitHub Pages
         uses: peaceiris/actions-gh-pages@v4
         with:
-          github_token: ${{ secrets.GITHUB_TOKEN }}
           publish_dir: ./dist
 
       - name: Publish to NPM
