@@ -1,11 +1,10 @@
 {
     "$schema": "https://typedoc.org/schema.json",
     "out": "./wiki",
-    "name": "TSDoc GitHub Wiki Example",
+    "name": "TSDoc GitHub Wiki",
     "entryPoints": [
-        "src/index.ts",
-        "src/components/main.ts",
-        "src/components/loader.ts"
+        "src/main.ts",
+        "src/loader.ts"
     ],
     "plugin": [
         "typedoc-plugin-missing-exports",
