@@ -3,10 +3,7 @@
         "target": "ES2021",
         "module": "ESNext",
         "moduleResolution": "node",
-        "declaration": true,
-        "declarationMap": true,
         "experimentalDecorators": true,
         "useDefineForClassFields": false,
-        "outDir": "dist",
     }
 }
