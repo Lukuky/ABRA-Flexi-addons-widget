@@ -43,7 +43,7 @@
     "type": "git",
     "url": "git+https://github.com/Lukuky/ABRA-Flexi-addons-widget.git"
   },
-  "version": "0.1.0",
+  "version": "0.1.2",
   "keywords": [
     "widget",
     "web component",
@@ -53,7 +53,7 @@
   "author": "Lukáš Hubač",
   "license": "MIT",
   "type": "module",
-  "publishConfig": {
-    "registry": "https://registry.npmjs.org/"
-  }
+  "files": [
+    "./dist/addons-widget.js"
+  ]
 }
