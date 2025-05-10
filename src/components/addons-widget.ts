@@ -5,16 +5,16 @@ import { repeat } from 'lit/directives/repeat.js';
 import { msg, localized } from '@lit/localize';
 import { configureLocalization } from '@lit/localize';
 
-import { svgAddon, svgArrowLeft, svgArrowRight, svgCross, svgSearch } from './assets';
-import { sourceLocale, targetLocales, allLocales } from './generated/locale-codes';
+import { svgAddon, svgArrowLeft, svgArrowRight, svgCross, svgSearch } from '../assets/assets';
+import { sourceLocale, targetLocales, allLocales } from '../generated/locale-codes';
 import './loader';
 /**
  * Pre-rendering localizations
  * Specified in locale-codes.js generated from lit-localize.json
  */
-import { templates as deTemplates } from './generated/locales/de';
-import { templates as enTemplates } from './generated/locales/en';
-import { templates as skTemplates } from './generated/locales/sk';
+import { templates as deTemplates } from '../generated/locales/de';
+import { templates as enTemplates } from '../generated/locales/en';
+import { templates as skTemplates } from '../generated/locales/sk';
 
 const localizedTemplates = new Map([
     ['de', deTemplates],
