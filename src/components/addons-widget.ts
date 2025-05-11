@@ -1,5 +1,5 @@
 import { LitElement, html, css, nothing } from 'lit';
-import { Task } from '@lit/task';
+import { Task, TaskStatus } from '@lit/task';
 import { customElement, property, state } from 'lit/decorators.js';
 import { repeat } from 'lit/directives/repeat.js';
 import { msg, localized } from '@lit/localize';
@@ -7,7 +7,7 @@ import { configureLocalization } from '@lit/localize';
 
 import { svgAddon, svgArrowLeft, svgArrowRight, svgCross, svgSearch } from '../assets/assets';
 import { sourceLocale, targetLocales, allLocales } from '../generated/locale-codes';
-import './loader';
+import './addons-loader';
 /**
  * Pre-rendering localizations
  * Specified in locale-codes.js generated from lit-localize.json
@@ -75,14 +75,15 @@ interface Addon {
     description: string,
     developer: string,
     hasPrice: boolean,
-    id: Number,
-    installScript: string | null,
-    linkMore: string | null,
+    id: number,
+    installScript?: string,
+    installed?: boolean,
+    linkMore?: string,
     name: string,
     partner: Partner,
     perex: string,
     photo: URL,
-    uninstallScript: string | null,
+    uninstallScript?: string,
     variants: string[],
     www: string | null
 }
@@ -239,6 +240,7 @@ export class WidgetElement extends LitElement {
         .panel .centered {
             grid-column-start: 2;
             justify-self: center;
+            text-align: center;
         }
 
         .panel .right {
@@ -328,7 +330,7 @@ export class WidgetElement extends LitElement {
             cursor: progress;
         }
 
-        .loading addons-loader {
+        addons-loader {
             --size: 3em;
             --main-color: var(--color-primary);
         }
@@ -475,6 +477,19 @@ export class WidgetElement extends LitElement {
 
     `;
 
+    // ---------------------- PROPERTIES ---------------------- //
+    /**
+     * Maximum amount of addons on one page of overview
+     */
+    @property({ type: Number })
+    addonsPerPage: number = 12;
+
+    @property({ type: String })
+    installEndpoint?: string;
+
+    @property({ type: Boolean })
+    localeSelect: boolean = false;
+
     // ---------------------- STATES ---------------------- //
     /**
      * All categories of addons
@@ -533,17 +548,20 @@ export class WidgetElement extends LitElement {
     @state()
     private _selectedLocale: string = getLocale();
 
-    /**
-     * Maximum amount of addons on one page of overview
-     */
-    @property({ type: Number })
-    addonsPerPage = 8;
+    @state()
+    private _installedAddons: Set<number> = new Set<number>;
+
+    @state()
+    private _cycleInstall: boolean = false;
+
+    @state()
+    private _cycleUninstall: boolean = false;
 
     // ---------------------- LIT TASKS ---------------------- //
     /**
      * Task to setup locales
      */
-    private _TaskLocales = new Task(this, {
+    private _taskLocales = new Task(this, {
 
         task: async ([selectedLocale]) => {
             if (selectedLocale !== getLocale()) {
@@ -564,7 +582,10 @@ export class WidgetElement extends LitElement {
     /**
      * Task fetching all addons categories from Flexibee API to component's state
      */
-    public _TaskCategories = new Task(this, {
+    private _taskCategories = new Task(this, {
+        autoRun: true,
+
+        args: () => [],
 
         task: async ([], { signal }) => {
             const url = new URL('https://support.flexibee.eu/api/categories');
@@ -577,53 +598,92 @@ export class WidgetElement extends LitElement {
             return data;
         },
 
-        args: () => []
-
     });
 
     /**
      * Task fetching amount of addons from Flexibee API
      * Run each time on attributes change, so whenever filter or page changes
      */
-    private _addons = new Task(this, {
+    private _taskAddons = new Task(this, {
+        autoRun: true,
 
-        task: async ([langOpt, category, page, size, search], { signal }) => {
+        args: () => [this._selectedLocale, this._selectedCategory, this._addonsPageNum, this.addonsPerPage, this._searchPhrase, this.installEndpoint, this._installedAddons],
+
+        task: async ([langOpt, category, page, size, search, installEndpoint, installedAddons], { signal }) => {
             let url = new URL('https://support.flexibee.eu/api/addons/search');
             url.searchParams.append('langOpt', langOpt);
             if (category) url.searchParams.append('categoryId', category.toString());
             url.searchParams.append('page', page.toString());
             url.searchParams.append('size', size.toString());
             if (search) url.searchParams.append('search', search);
+
             const response = await fetch(url, { signal });
 
-            if (!response.ok) { throw new Error(response.status.toString()); }
+            if (!response.ok) {
+                throw new Error(response.status.toString());
+            }
 
             const data: AddonsSearch = await response.json() as AddonsSearch;
+
             this._addonsTotalPages = data.totalPages;
-            this._currentAddons = data.content;
-            console.log(data);
+
+            if (installEndpoint) {
+                this._currentAddons = data.content.map(addon => ({
+                    ...addon,
+                    installed: installedAddons.has(addon.id),
+                }));
+                console.log("2");
+            }
+
             return data;
-        },
-
-        args: () => [this._selectedLocale, this._selectedCategory, this._addonsPageNum, this.addonsPerPage, this._searchPhrase]
-
+        }
     });
 
+    private _taskInstall = new Task(this, {
+        autoRun: false,
 
-    // ---------------------- CALLBACK FUNCTION ---------------------- //
-    /**
-     * Fetch categories after connecting to DOM
-     */
-    connectedCallback(): void {
-        super.connectedCallback();
+        args: () => [],
 
-        this._TaskCategories.run();
-        this._TaskCategories.taskComplete.catch((error) => {
-            console.error('Failed to fetch categories:', error);
-            this._categories = [];
-        });
-    }
+        task: async ([], { signal }) => {
+            this._cycleInstall = true;
+            if (!this.installEndpoint
+                || !this._selectedAddon
+                || !this._selectedAddon.installScript) {
+                throw new Error("Missing properties for installing.");
+            }
+            // TODO install addon using installScript
 
+            // Mock wait for install
+            await new Promise(resolve => setTimeout(resolve, 5000));
+
+            this._installedAddons.add(this._selectedAddon.id);
+            // this._taskAddons.run();
+            this._selectedAddon.installed = true;
+        }
+    });
+
+    private _taskUninstall = new Task(this, {
+        autoRun: false,
+
+        args: () => [],
+
+        task: async ([], { signal }) => {
+            this._cycleUninstall = true;
+            if (!this.installEndpoint
+                || !this._selectedAddon
+                || !this._selectedAddon.uninstallScript) {
+                throw new Error();
+            }
+            // TODO uninstall addon using uninstallScript
+
+            // Mock wait for uninstall
+            await new Promise(resolve => setTimeout(resolve, 3000));
+
+            this._installedAddons.delete(this._selectedAddon.id);
+            // this._taskAddons.run();
+            this._selectedAddon.installed = false;
+        }
+    });
 
     // ---------------------- STATES CHANGING ---------------------- //
     /**
@@ -631,6 +691,8 @@ export class WidgetElement extends LitElement {
      */
     _goBack() {
         this._widgetState = 'overview';
+        this._cycleInstall = false;
+        this._cycleUninstall = false;
     }
 
     /**
@@ -735,6 +797,18 @@ export class WidgetElement extends LitElement {
         return `https://${url}`
     }
 
+    _install() {
+        this._taskInstall.run();
+    }
+
+    _uninstall() {
+        this._taskUninstall.run();
+    }
+
+    _inProgress() {
+        return this._taskInstall.status === TaskStatus.PENDING || this._taskUninstall.status === TaskStatus.PENDING;
+    }
+
     // ---------------------- RENDERING ---------------------- //
     /**
      * Compose header of the component for both widget states
@@ -745,13 +819,14 @@ export class WidgetElement extends LitElement {
             <header class="panel">
                 ${this._widgetState == 'detail'
                 ? html`
-                <button class='btnEmpty left' @click="${this._goBack}">${msg("Zpět na přehled", { id: "buttonBack" })}</button>
+                <button class='btnEmpty left' ?hidden=${this._inProgress()} @click="${this._goBack}">${msg("Zpět na přehled", { id: "buttonBack" })}</button>
                 <h1 class='centered'>${this._selectedAddon.name}</h1>
                 `
                 : html`
                 <h1 class='centered'>${msg('Doplňky ABRA Flexi', { id: 'title' })}</h1>
                 `}
-                <div class="selectWrapper right">
+                ${this.localeSelect == true
+                ? html`<div class="selectWrapper right">
                     <label id="selectLocale">${msg("Jazyk", { id: "labelLanguage" })}</label>
                     <select id='selectLocale' @change="${this._localeChanged}">
                         ${allLocales.map((locale) => html`
@@ -760,7 +835,8 @@ export class WidgetElement extends LitElement {
                             </option>`
                 )}
                     </select>
-                </div>
+                </div>`
+                : nothing}
             </header>
         `;
     }
@@ -816,7 +892,7 @@ export class WidgetElement extends LitElement {
      * @returns #content with addon cards
      */
     _renderOverview() {
-        return this._addons.render({
+        return this._taskAddons.render({
             pending: () => html`
             <div class='cards'>
                 ${Array.from({ length: this.addonsPerPage }, (_, i) => html`
@@ -837,18 +913,18 @@ export class WidgetElement extends LitElement {
                         }
                     <h2>${addon.name}</h2>
                     ${this._retrievePerex(addon)}
-                        <span class='addonNote'>
-                        ${addon.hasPrice
-                            ? html`
-                            ${msg('Zpoplatněno', { id: 'paid' })}
-                        `
-                            : html`
-                            ${msg('Zdarma', { id: 'free' })}
-                        `
+                    <span class='addonNote'>
+                        ${addon.installed
+                            ? html`${msg('Instalovaný', { id: 'installed' })}`
+                            : html`${addon.hasPrice
+                                ? html`${msg('Zpoplatněno', { id: 'paid' })}`
+                                : html`${msg('Zdarma', { id: 'free' })}`
+                                }`
                         }
-                </span>
-                </article>
-                `)}
+                    </span>
+                    </article>
+                        `)
+                        }
                 </div>`
                     : html`
                     <div class='banner'>
@@ -873,6 +949,54 @@ export class WidgetElement extends LitElement {
      * @returns style unified description of addon
      */
     _renderDetail() {
+        if (this._cycleInstall) {
+            return this._taskInstall.render({
+                pending: () => html`
+                <div class='banner'>
+                    <addons-loader></addons-loader>
+                    <p>${msg('Probíhá instalace doplňku', { id: 'installing-addon' })}</p>
+                </div>
+                `,
+                complete: () => html`
+                    <div class='banner'>
+                        <div class='banner'>
+                            <p>${msg('Doplněk byl úspěšně nainstalován', { id: 'success-installing-addon' })}</p>
+                            <button class='btnEmpty' @click='${() => { this._cycleInstall = false }}'>${msg('Zpět na detail', { id: 'back-to-detail' })}</button>
+                        </div>
+                    </div>
+                `,
+                error: () => html`
+                    <div class='banner'>
+                        <p>${msg('Nastala chyba při instalaci doplňku', { id: 'error-installing-addon' })}</p>
+                        <button class='btnEmpty' @click='${() => { this._cycleInstall = false }}'>${msg('Zkusit znovu', { id: 'try-again' })}</button>
+                    </div>
+                `}
+            )
+        }
+        if (this._cycleUninstall) {
+            return this._taskUninstall.render({
+                pending: () => html`
+                    <div class='banner'>
+                        <addons-loader></addons-loader>
+                        <p>${msg('Probíhá odinstalace doplňku', { id: 'uninstalling-addon' })}</p>
+                    </div>
+                    `,
+                complete: () => html`
+                    <div class='banner'>
+                        <div class='banner'>
+                            <p>${msg('Doplněk byl úspěšně odinstalován', { id: 'success-installing-addon' })}</p>
+                            <button class='btnEmpty' @click='${() => { this._cycleUninstall = false }}'>${msg('Zpět na detail', { id: 'back-to-detail' })}</button>
+                        </div>
+                    </div>
+                `,
+                error: () => html`
+                        <div class='banner'>
+                            <p>${msg('Nastala chyba při odinstalaci doplňku', { id: 'error-uninstalling-addon' })}</p>
+                            <button class='btnEmpty' @click='${() => { this._cycleUninstall = false }}'>${msg('Zkusit znovu', { id: 'try-again' })}</button>
+                        </div>
+                    `}
+            )
+        }
         const detail = document.createElement('div');
         detail.classList.add('detail');
         detail.innerHTML = this._selectedAddon.description;
@@ -911,14 +1035,24 @@ export class WidgetElement extends LitElement {
                         `
                         : nothing}
                         ${this._selectedAddon.installScript
-                        ? html`
-                            <button class="btnFull right" @click="${() => { }}" > ${msg('Instalovat', { id: 'install' })} </button>
-                        `
+                        ? this.installEndpoint
+                            ? !this._selectedAddon.installed
+                                ? html`
+                                    <button class="btnFull right" ?hidden=${this._inProgress()} @click="${this._install}" > ${msg('Instalovat', { id: 'install' })} </button>
+                                `
+                                : html`
+                                    <button class="btnFull right" ?hidden=${this._inProgress()} @click="${this._uninstall}" > ${msg('Odinstalovat', { id: 'uninstall' })} </button>
+                                `
+                            : html`
+                                <a class="centered" href="https://www.abra.eu/flexi/" target="_blank">
+                                    <button class="btnFull right" > ${msg('Instalovat ve Flexi', { id: 'install-in-flexi' })} </button>
+                                </a>
+                            `
                         : nothing}
                         `
                 : html`
-                    <div id = 'pager' class="panel centered" ?visible = "${this._addonsTotalPages == 0}" >
-                        <button @click="${() => this._addonsPageNum--}" ?hidden = "${this._addonsPageNum == 0}" >
+                    <div id='pager' class="panel centered" ?visible="${this._addonsTotalPages == 0}" >
+                        <button @click="${() => this._addonsPageNum--}" ?hidden="${this._addonsPageNum == 0}" >
                             ${svgArrowLeft()}
                         </button>
                     ${this._addonsTotalPages > 0
@@ -928,7 +1062,7 @@ export class WidgetElement extends LitElement {
                         </div>
                         `
                         : nothing}
-                        <button @click="${() => this._addonsPageNum++}" ?hidden = "${this._addonsPageNum + 1 >= this._addonsTotalPages}" >
+                        <button @click="${() => this._addonsPageNum++}" ?hidden="${this._addonsPageNum + 1 >= this._addonsTotalPages}" >
                             ${svgArrowRight()}
                         </button>
                     </div>
