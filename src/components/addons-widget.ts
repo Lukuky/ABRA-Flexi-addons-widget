@@ -119,25 +119,24 @@ export class WidgetElement extends LitElement {
         * https://github.com/lit/lit-element/issues/793
         */
         :host {
-            // customizable variables;
-            --font-family: var(--custom-font-family, 'Gotham-Medium', 'Open Sans', Arial, serif);
-            --font-size: var(--custom-font-size, 1rem);
-            --color-primary: var(--custom-color-primary, #0e5dbb);
-            --text-color-primary: var(--custom-text-color-primary, #000000);
-            --text-color-secondary: var(--custom-text-color-secondary, #6d6d70);
-            --bg-color-primary: var(--custom-bg-color-primary, #fafafa);
-            --bg-color-secondary: var(--custom-bg-color-secondary, #f4f4f4);
-            --bg-color-interactive: var(--custom-bg-color-interactive, #ffffff);
-            --bg-color-tag: var(--custom-bg-color-tag, #dbdbdb);
-            --border-primary: var(--custom-border-primary, solid #aaaaaa 0.1em);
-            --border-interactive: var(--custom-border-interactive, solid #9c9c9c 0.1em);
-            --border-radius-primary: var(--custom-border-radius-primary, 0.4em);
-            --border-radius-interactive: var(--custom-border-radius-interactive, 0.4em);
-            --icons-color: var(--custom-bg-color-tag, var(--text-color-secondary));
-            // inner variables;
-            --addon-card-gap: 1em;
-            --addon-card-height: 15em;
-            --around-gap: 0.7em;
+            --font-family: Arial, serif;
+            --font-size: 1rem;
+            --color-primary: #0e5dbb;
+            --text-color-primary: #000000;
+            --text-color-secondary: #6d6d70;
+            --bg-color-primary: #fafafa;
+            --bg-color-secondary: #f4f4f4;
+            --bg-color-interactive: #ffffff;
+            --bg-color-tag: #dbdbdb;
+            --border-primary: solid #aaaaaa 0.1em;
+            --border-interactive: solid #9c9c9c 0.1em;
+            --border-radius-primary: 0.4em;
+            --border-radius-interactive: 0.4em;
+            --icons-color: var(--text-color-secondary);
+            --addon-overview-height: 20em;
+            --addon-overview-margin: 0.6em;
+            --overview-rows: 2;
+            --margin-container: 0;
         }
 
         * {
@@ -197,19 +196,16 @@ export class WidgetElement extends LitElement {
             border: var(--border-primary);
             border-radius: var(--border-radius-primary);
             background-color: var(--bg-color-primary);
-            padding: var(--around-gap);
+            padding: 1em;
+            margin: var(--margin-container);
         }
 
         #content {
             overflow-y: scroll;
-            height: 39.39em;
+            height: calc(var(--overview-rows) * var(--addon-overview-height) + 2 * var(--addon-overview-margin));
             border: var(--border-primary);
             border-radius: var(--border-radius-primary);
-            margin: var(--around-gap) 0;
-        }
-
-        #content.extended {
-            height: var(--max-rows, 4);
+            margin: 1em 0;
         }
 
         #searchFilters {
@@ -253,8 +249,7 @@ export class WidgetElement extends LitElement {
             grid-template-columns: repeat(4, 1fr);
             justify-content: stretch;
             align-content: start;
-            gap: var(--addon-card-gap);
-            padding: var(--addon-card-gap);
+            padding: var(--addon-overview-margin);
             background-color: var(--bg-color-secondary);
         }
 
@@ -276,6 +271,12 @@ export class WidgetElement extends LitElement {
             }
         }
 
+        .cardWrapper {
+            display: flex;
+            align-items: stretch;
+            height: var(--addon-overview-height);
+        }
+
         .addon {
             position: relative;
             display: flex;
@@ -284,8 +285,8 @@ export class WidgetElement extends LitElement {
             flex-grow: 1;
             text-align: center;
             gap: 0.6em;
-            height: var(--addon-card-height);
             padding: 1.5em;
+            margin: var(--addon-overview-margin);
             background-color: var(--bg-color-interactive);
             box-shadow: none;
             transition: box-shadow 0.2s ease-in;
@@ -896,9 +897,11 @@ export class WidgetElement extends LitElement {
             pending: () => html`
             <div class='cards'>
                 ${Array.from({ length: this.addonsPerPage }, (_, i) => html`
-                    <article class='addon loading'>
-                        <addons-loader></addons-loader>
-                    </article>
+                    <div class='cardWrapper'>
+                        <article class='addon loading'>
+                            <addons-loader></addons-loader>
+                        </article>
+                    </div>
                 `)}
             </div>`,
             complete: () => html`
@@ -906,23 +909,25 @@ export class WidgetElement extends LitElement {
                     ? html`
                 <div class='cards'>
                 ${repeat(this._currentAddons, (addon) => addon.id, (addon) => html`
-                <article class='addon' tabindex='0' @click="${() => this._goToDetail(addon)}">
-                    ${addon.photo
+                    <div class='cardWrapper'>
+                    <article class='addon' tabindex='0' @click="${() => this._goToDetail(addon)}">
+                        ${addon.photo
                             ? html`<img src='${addon.photo.toString()}'>`
                             : svgAddon()
                         }
-                    <h2>${addon.name}</h2>
-                    ${this._retrievePerex(addon)}
-                    <span class='addonNote'>
-                        ${addon.installed
+                        <h2>${addon.name}</h2>
+                        ${this._retrievePerex(addon)}
+                        <span class='addonNote'>
+                            ${addon.installed
                             ? html`${msg('Instalovaný', { id: 'installed' })}`
                             : html`${addon.hasPrice
                                 ? html`${msg('Zpoplatněno', { id: 'paid' })}`
                                 : html`${msg('Zdarma', { id: 'free' })}`
                                 }`
                         }
-                    </span>
+                        </span>
                     </article>
+                    </div>
                         `)
                         }
                 </div>`
