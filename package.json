@@ -31,9 +31,10 @@
     "typescript": "^5.8.3"
   },
   "scripts": {
-    "watch": "rollup --config --watch",
+    "clean": "rm -rf ./dist/*",
+    "watch": "npm run clean && rollup --config --watch",
     "localize": "lit-localize extract && lit-localize build",
-    "build": "rollup --config",
+    "build": "npm run clean && rollup --config",
     "test": "web-test-runner --debug",
     "docs": "typedoc"
   },
