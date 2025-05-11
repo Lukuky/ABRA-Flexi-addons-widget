@@ -6,6 +6,7 @@ import { dts } from 'rollup-plugin-dts';
 const config = [
     {
         input: './src/index.ts',
+        treeshake: !process.env.ROLLUP_WATCH,
         output: {
             dir: 'dist',
             format: 'esm',
