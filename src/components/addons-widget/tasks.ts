@@ -15,7 +15,6 @@ export const createTaskCategories = (component: any) =>
 
             const data: Category[] = await response.json();
             component._categories = data;
-            return data;
         },
     });
 
@@ -57,9 +56,6 @@ export const createTaskAddons = (component: any) =>
                     installed: installedAddons.has(addon.id),
                 }));
             }
-            console.log(data);
-
-            return data;
         },
     });
 
