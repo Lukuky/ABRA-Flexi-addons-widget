@@ -42,7 +42,7 @@ export class WidgetElement extends LitElement {
     @state() private _installedAddons: Set<number> = new Set<number>;
     @state() private _cycleInstall: boolean = false;
     @state() private _cycleUninstall: boolean = false;
-    @state() private _onlyByPartner: boolean = false;
+    @state() private _onlyByPartner: boolean = true;
 
     // ---------------------- LIT TASKS ---------------------- //
     private _taskCategories = createTaskCategories(this);
@@ -230,6 +230,8 @@ export class WidgetElement extends LitElement {
         })}
                 </select>
             </div>
+            ${this.partnerId
+                ? html`
             <div class="checkboxWrapper centered">
                 <input type="checkbox" id="onlyByPartner" .checked=${this._onlyByPartner} @change="${(e: Event) => this._onlyByPartner = (e.target as HTMLInputElement).checked}" />
                 <label for="onlyByPartner">${msg("Pouze vlastní", { id: "only-by-partner" })}</label>

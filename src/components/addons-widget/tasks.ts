@@ -40,7 +40,7 @@ export const createTaskAddons = (component: any) =>
             url.searchParams.append('size', size.toString());
             if (category) url.searchParams.append('categoryId', category.toString());
             if (search) url.searchParams.append('search', search);
-            if (onlyByPartner) url.searchParams.append('partnerId', partnerId);
+            if (partnerId && onlyByPartner) url.searchParams.append('partnerId', partnerId);
 
             const response = await fetch(url, { signal });
 
