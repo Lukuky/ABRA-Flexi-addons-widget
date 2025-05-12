@@ -75,9 +75,14 @@ export class WidgetElement extends LitElement {
      * Change state to detail and set addon to be shown
      * @param addon Addon to be shown in detail
      */
-    _goToDetail(addon: Addon) {
-        this._selectedAddon = addon;
-        this._widgetState = 'detail';
+    _goToDetail(event: Event) {
+        const target = event.currentTarget as HTMLElement;
+        const addonId = target.dataset.id;
+
+        if (addonId) {
+            this._selectedAddon = this._currentAddons.find(addon => addon.id === parseInt(addonId, 10)) || null;
+            this._widgetState = 'detail';
+        }
     }
 
     /**
@@ -292,7 +297,7 @@ export class WidgetElement extends LitElement {
                 <div class='cards'>
                 ${repeat(this._currentAddons, (addon) => addon.id, (addon) => html`
                     <div class='cardWrapper'>
-                    <article class='addon' tabindex='0' @click="${() => this._goToDetail(addon)}">
+                    <article class='addon' tabindex='0' data-id="${addon.id}" @click="${this._goToDetail}">
                         ${addon.photo
                             ? html`<img src='${addon.photo.toString()}'>`
                             : svgAddon()
