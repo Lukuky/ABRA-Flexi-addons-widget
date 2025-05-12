@@ -1,1 +1,1 @@
-import "./components/addons-widget";
+import "./components/addons-widget/addons-widget";

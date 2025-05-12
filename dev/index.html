@@ -9,7 +9,12 @@
 </head>
 
 <body>
-    <addons-widget installEndpoint="/c/{firma}/import.xml" localeSelect></addons-widget>
+    <style>
+        addons-widget {
+            /* --overview-rows: 1; */
+        }
+    </style>
+    <addons-widget installEndpoint="/c/{firma}/import.xml" localeSelect partnerId=380></addons-widget>
 </body>
 
 </html>
