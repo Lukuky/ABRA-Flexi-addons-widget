@@ -131,6 +131,16 @@ export const widgetStyles = css`
         justify-self: flex-end;
     }
 
+    @media screen and (max-width: 40em) {
+        .panel.wide {
+            display: flex;
+            flex-flow: row wrap;
+            align-items: center;
+            justify-content: center;
+            justify-content: space-around;
+        }
+    }
+
     .cards {
         display: grid;
         grid-template-columns: repeat(4, 1fr);

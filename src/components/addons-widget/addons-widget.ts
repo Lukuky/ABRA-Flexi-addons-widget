@@ -97,6 +97,7 @@ export class WidgetElement extends LitElement {
         this._addonsPageNum = 0;
         (this.shadowRoot.getElementById("search") as HTMLInputElement).value = "";
         this._searchPhrase = "";
+        this._selectedCategory = null;
     }
 
     /**
@@ -191,7 +192,7 @@ export class WidgetElement extends LitElement {
      */
     _renderHeader() {
         return html`
-            <header class="panel">
+            <header class="panel wide">
                 ${this._widgetState == 'detail'
                 ? html`
                 <button class='btnEmpty left' ?hidden=${this._inProgress()} @click="${this._goBack}">${msg("Zpět na přehled", { id: "buttonBack" })}</button>
@@ -218,7 +219,7 @@ export class WidgetElement extends LitElement {
 
     _renderSearchFilters() {
         return html`
-        <div class="panel">
+        <div class="panel wide">
             <div class="selectWrapper left">
                 <label for='selectCategory'>${msg("Kategorie", { id: "labelCategory" })}</label>
                 <select id='selectCategory' @change="${this._updateCategory}">
@@ -232,10 +233,11 @@ export class WidgetElement extends LitElement {
             </div>
             ${this.partnerId
                 ? html`
-            <div class="checkboxWrapper centered">
-                <input type="checkbox" id="onlyByPartner" .checked=${this._onlyByPartner} @change="${(e: Event) => this._onlyByPartner = (e.target as HTMLInputElement).checked}" />
-                <label for="onlyByPartner">${msg("Pouze vlastní", { id: "only-by-partner" })}</label>
-            </div>
+                    <div class="checkboxWrapper centered">
+                        <input type="checkbox" id="onlyByPartner" .checked=${this._onlyByPartner} @change="${(e: Event) => this._onlyByPartner = (e.target as HTMLInputElement).checked}" />
+                        <label for="onlyByPartner">${msg("Pouze vlastní", { id: "only-by-partner" })}</label>
+                    </div>`
+                : nothing}
             <div class='searchWrapper right'>
                 <button @click="${this._search}" aria-label='Search phrase'>
                     ${svgSearch()}
@@ -395,7 +397,7 @@ export class WidgetElement extends LitElement {
      */
     _renderFooter() {
         return html`
-            <footer class="panel">
+            <footer class="panel wide">
             ${this._widgetState == 'detail'
                 ? html`
                         ${this._selectedAddon.partner
