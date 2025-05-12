@@ -17,12 +17,8 @@ export interface Partner {
 }
 
 export interface Addon {
-    active: boolean;
-    api: boolean;
     categories: string[];
-    code: string;
     description: string;
-    developer: string;
     hasPrice: boolean;
     id: number;
     installScript?: string;
@@ -34,7 +30,6 @@ export interface Addon {
     photo: URL;
     uninstallScript?: string;
     variants: string[];
-    www: string | null;
 }
 
 export interface AddonsSearch {
