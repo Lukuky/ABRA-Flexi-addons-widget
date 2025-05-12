@@ -50,6 +50,17 @@ export class WidgetElement extends LitElement {
     private _taskInstall = createTaskInstall(this);
     private _taskUninstall = createTaskUninstall(this);
 
+    // ---------------------- LIFECYCLE METHODS ---------------------- //
+    updated(changedProperties: Map<string | number | symbol, unknown>) {
+        super.updated(changedProperties);
+
+        // Scroll #content to the top after each update
+        const contentElement = this.shadowRoot?.getElementById('content');
+        if (contentElement) {
+            contentElement.scrollTop = 0;
+        }
+    }
+
     // ---------------------- STATES CHANGING ---------------------- //
     /**
      * Change state (from detail) to overview

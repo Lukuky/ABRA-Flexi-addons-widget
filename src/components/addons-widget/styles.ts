@@ -97,6 +97,7 @@ export const widgetStyles = css`
         border: var(--border-primary);
         border-radius: var(--border-radius-primary);
         margin: 1em 0;
+        scroll-behavior: smooth;
     }
 
     #searchFilters {
