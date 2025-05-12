@@ -35,7 +35,7 @@
     "watch": "npm run clean && rollup --config --watch",
     "localize": "lit-localize extract && lit-localize build",
     "build": "npm run clean && rollup --config",
-    "test": "web-test-runner --debug",
+    "test": "web-test-runner",
     "docs": "typedoc"
   },
   "name": "abra-flexi-addons-widget",
