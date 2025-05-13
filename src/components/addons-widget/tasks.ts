@@ -9,7 +9,7 @@ import { AddonsSearch, Category } from './types';
  * when the component is initialized.
  *
  * @param component The component instance that uses this task.
- * @returns {Task} A Lit Task instance for fetching categories.
+ * @returns A Lit Task instance for fetching categories.
  */
 export const createTaskCategories = (component: any) =>
     new Task(component, {
@@ -36,7 +36,7 @@ export const createTaskCategories = (component: any) =>
  * of the provided component. The task runs automatically when the component is initialized.
  *
  * @param component The component instance that uses this task.
- * @returns {Task} A Lit Task instance for fetching addons.
+ * @returns A Lit Task instance for fetching addons.
  */
 export const createTaskAddons = (component: any) =>
     new Task(component, {
@@ -85,7 +85,7 @@ export const createTaskAddons = (component: any) =>
  * is not implemented yet and is currently mocked with a delay.
  *
  * @param component The component instance that uses this task.
- * @returns {Task} A Lit Task instance for simulating addon installation.
+ * @returns A Lit Task instance for simulating addon installation.
  */
 export const createTaskInstall = (component: any) =>
     new Task(component, {
@@ -117,7 +117,7 @@ export const createTaskInstall = (component: any) =>
  * is not implemented yet and is currently mocked with a delay.
  *
  * @param component The component instance that uses this task.
- * @returns {Task} A Lit Task instance for simulating addon uninstallation.
+ * @returns A Lit Task instance for simulating addon uninstallation.
  */
 export const createTaskUninstall = (component: any) =>
     new Task(component, {
