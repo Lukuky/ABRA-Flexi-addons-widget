@@ -15,7 +15,16 @@ import { createTaskCategories, createTaskAddons, createTaskInstall, createTaskUn
 import { removeRedundantHTML, retrievePerex, localeCategoryName, createAbsoluteLink } from './utils';
 
 /**
- * Main addons widget Lit web component
+ * Main addons widget Lit web component.
+ *
+ * This component provides a user interface for browsing, searching, and managing addons
+ * for the ABRA Flexi system. It supports localization, pagination, and integration with
+ * external APIs for fetching addon data.
+ *
+ * @example
+ * ```html
+ * <addons-widget addons-per-page="12" locale-select partner-id="123"></addons-widget>
+ * ```
  */
 @localized()
 @customElement('addons-widget')
@@ -52,19 +61,23 @@ export class WidgetElement extends LitElement {
     private _taskUninstall = createTaskUninstall(this);
 
     // ---------------------- LIFECYCLE METHODS ---------------------- //
+    /**
+     * Called when the component is updated.
+     * Scrolls the content area to the top after each update.
+     * @param changedProperties Map of changed properties.
+     */
     updated(changedProperties: Map<string | number | symbol, unknown>) {
         super.updated(changedProperties);
-
-        // Scroll #content to the top after each update
         const contentElement = this.shadowRoot?.getElementById('content');
         if (contentElement) {
             contentElement.scrollTop = 0;
         }
     }
 
-    // ---------------------- STATES CHANGING ---------------------- //
+    // ---------------------- STATES/PROPS CHANGING METHODS ---------------------- //
     /**
-     * Change state (from detail) to overview
+     * Changes the widget state to 'overview'.
+     * Resets installation and uninstallation cycles.
      */
     _goBack() {
         this._widgetState = 'overview';
@@ -73,8 +86,8 @@ export class WidgetElement extends LitElement {
     }
 
     /**
-     * Change state to detail and set addon to be shown
-     * @param addon Addon to be shown in detail
+     * Changes the widget state to 'detail' and sets the selected addon.
+     * @param event Event triggered by clicking on an addon card.
      */
     _goToDetail(event: Event) {
         const target = event.currentTarget as HTMLElement;
@@ -85,11 +98,9 @@ export class WidgetElement extends LitElement {
             this._widgetState = 'detail';
         }
     }
-
     /**
-     * Update category on categories select element change
-     * Nulling the page number
-     * @param e Event for targeting select for the value
+     * Updates the selected category and resets the page number.
+     * @param e Event triggered by changing the category dropdown.
      */
     _updateCategory(e: Event) {
         this._addonsPageNum = 0;
@@ -97,7 +108,7 @@ export class WidgetElement extends LitElement {
     }
 
     /**
-     * Reset page number to zero and setting search phrase to empty string
+     * Resets the search phrase and selected category.
      */
     _resetSearch() {
         this._addonsPageNum = 0;
@@ -107,8 +118,7 @@ export class WidgetElement extends LitElement {
     }
 
     /**
-     * Set searchPhrase from text input (and cause fetching new addons)
-     * Nulling the page number
+     * Sets the search phrase from the input field and resets the page number.
      */
     _search() {
         this._addonsPageNum = 0;
@@ -116,36 +126,55 @@ export class WidgetElement extends LitElement {
     }
 
     /**
-     * Changing locale according to window.location URL
-     * @param event Event to target select element with locale codes
+     * Changes the locale based on the selected value.
+     * @param event Event triggered by changing the locale dropdown.
      */
     _localeChanged(event: Event) {
         this._selectedLocale = (event.target as HTMLSelectElement).value;
         setLocale(this._selectedLocale);
     }
 
+    /**
+     * Triggers a search when the Enter key is pressed in the search input.
+     * @param e Keyboard event.
+     */
     _searchOnEnter(e: Event) {
         if ((e as KeyboardEvent).key === "Enter") {
             this._search();
         }
     }
 
+    /**
+     * Starts the addon installation process.
+     */
     _install() {
         this._taskInstall.run();
     }
 
+    /**
+     * Starts the addon uninstallation process.
+     */
     _uninstall() {
         this._taskUninstall.run();
     }
 
+    /**
+     * Checks if an installation or uninstallation process is in progress.
+     * @returns {boolean} True if a process is in progress, otherwise false.
+     */
     _inProgress() {
         return this._taskInstall.status === TaskStatus.PENDING || this._taskUninstall.status === TaskStatus.PENDING;
     }
 
     // ---------------------- RENDERING ---------------------- //
     /**
-     * Compose header of the component for both widget states
-     * @returns HTML with component header
+     * Renders the header of the widget.
+     *
+     * The header displays the title of the widget or the name of the selected addon
+     * in the detail view. It also includes a back button in the detail view and
+     * an optional locale selection dropdown.
+     *
+     * @returns The header template.
      */
     _renderHeader() {
         return html`
@@ -174,6 +203,15 @@ export class WidgetElement extends LitElement {
         `;
     }
 
+    /**
+     * Renders the search filters section.
+     *
+     * This section includes a category dropdown, a search input field, and an optional
+     * checkbox for filtering addons by partner. It allows users to filter and search
+     * for addons.
+     *
+     * @returns The search filters template.
+     */
     _renderSearchFilters() {
         return html`
         <div class="panel wide">
@@ -210,6 +248,14 @@ export class WidgetElement extends LitElement {
 
     }
 
+    /**
+     * Renders the tags for the selected addon.
+     *
+     * This section displays metadata about the selected addon, such as its categories
+     * and supported variants, in a tag-like format.
+     *
+     * @returns The addon tags template.
+     */
     _renderAddonTags() {
         return html`
             <dl id='addonTags'>
@@ -227,9 +273,13 @@ export class WidgetElement extends LitElement {
     }
 
     /**
-     * Render function for cards of widget in #content
-     * tabindex has to be present in <a> element because it has no href
-     * @returns #content with addon cards
+     * Renders the overview of addons.
+     *
+     * This function displays a grid of addon cards. Each card represents an addon
+     * with its name, logo, and additional metadata. It also handles loading and error
+     * states for fetching addons.
+     *
+     * @returns The overview template.
      */
     _renderOverview() {
         return this._taskAddons.render({
@@ -289,8 +339,13 @@ export class WidgetElement extends LitElement {
     }
 
     /**
-     * Render detail of selected addon as a component content
-     * @returns style unified description of addon
+     * Renders the detail view of the selected addon.
+     *
+     * This function displays detailed information about the selected addon, including
+     * its description, installation/uninstallation status, and any associated actions.
+     * It also handles loading and error states for installation/uninstallation tasks.
+     *
+     * @returns The detail view template.
      */
     _renderDetail() {
         if (this._cycleInstall) {
@@ -349,8 +404,13 @@ export class WidgetElement extends LitElement {
     }
 
     /**
-     * Render footer for both widget states
-     * @returns footer element centered with pager (overview) or install button (detail)
+     * Renders the footer of the widget.
+     *
+     * The footer displays navigation controls for pagination in the overview state
+     * or action buttons (e.g., install/uninstall) in the detail state. It also includes
+     * partner information and links if available.
+     *
+     * @returns The footer template.
      */
     _renderFooter() {
         return html`
@@ -417,10 +477,13 @@ export class WidgetElement extends LitElement {
     }
 
     /**
-     * Main render function composing all render functions
-     * Lit library use this function as component content default
-     * component styles are applied on this DOM level
-     * @returns component template inner HTML
+     * Main render function composing all render functions.
+     *
+     * This function combines the header, content, and footer sections to create the
+     * complete widget layout. It dynamically switches between the overview and detail
+     * views based on the current widget state.
+     *
+     * @returns The complete widget template.
      */
     render() {
         return html`

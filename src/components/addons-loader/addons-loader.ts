@@ -3,7 +3,18 @@
 import { LitElement, html, css } from 'lit';
 import { customElement, property } from 'lit/decorators.js';
 
-
+/**
+ * A reusable loader component for displaying a spinning animation.
+ *
+ * This component is designed to indicate loading states in the UI. It uses customizable
+ * CSS variables for styling, allowing developers to adjust its size, colors, and animation
+ * behavior. The loader is implemented as a circular spinner.
+ *
+ * ### Example Usage:
+ * ```html
+ * <addons-loader style="--size: 3em; --main-color: #3498db;"></addons-loader>
+ * ```
+ */
 @customElement('addons-loader')
 export class LoaderElement extends LitElement {
     static styles = css`

@@ -1,6 +1,16 @@
 import { Task } from '@lit/task';
 import { AddonsSearch, Category } from './types';
 
+/**
+ * Creates a task to fetch addon categories.
+ *
+ * This task fetches a list of addon categories from the Flexibee API and updates
+ * the `_categories` state of the provided component. The task runs automatically
+ * when the component is initialized.
+ *
+ * @param component The component instance that uses this task.
+ * @returns {Task} A Lit Task instance for fetching categories.
+ */
 export const createTaskCategories = (component: any) =>
     new Task(component, {
         autoRun: true,
@@ -18,6 +28,16 @@ export const createTaskCategories = (component: any) =>
         },
     });
 
+/**
+ * Creates a task to fetch addons.
+ *
+ * This task fetches a paginated list of addons based on the provided filters (e.g., locale,
+ * category, search phrase). It updates the `_currentAddons` and `_addonsTotalPages` states
+ * of the provided component. The task runs automatically when the component is initialized.
+ *
+ * @param component The component instance that uses this task.
+ * @returns {Task} A Lit Task instance for fetching addons.
+ */
 export const createTaskAddons = (component: any) =>
     new Task(component, {
         autoRun: true,
@@ -57,6 +77,16 @@ export const createTaskAddons = (component: any) =>
         },
     });
 
+/**
+ * Creates a task to simulate the installation of an addon.
+ *
+ * This task simulates the installation process of an addon. It updates the `_cycleInstall`
+ * state to indicate that the installation is in progress. The actual installation logic
+ * is not implemented yet and is currently mocked with a delay.
+ *
+ * @param component The component instance that uses this task.
+ * @returns {Task} A Lit Task instance for simulating addon installation.
+ */
 export const createTaskInstall = (component: any) =>
     new Task(component, {
         autoRun: false,
@@ -68,9 +98,10 @@ export const createTaskInstall = (component: any) =>
                 || !component._selectedAddon.installScript) {
                 throw new Error("Missing properties for installing.");
             }
-            // TODO install addon using installScript
 
-            // Mock wait for install
+            // TODO: Implement actual installation logic using installScript.
+
+            // Simulate installation with a delay.
             await new Promise(resolve => setTimeout(resolve, 2000));
 
             component._installedAddons.add(component._selectedAddon.id);
@@ -78,6 +109,16 @@ export const createTaskInstall = (component: any) =>
         }
     });
 
+/**
+ * Creates a task to simulate the uninstallation of an addon.
+ *
+ * This task simulates the uninstallation process of an addon. It updates the `_cycleUninstall`
+ * state to indicate that the uninstallation is in progress. The actual uninstallation logic
+ * is not implemented yet and is currently mocked with a delay.
+ *
+ * @param component The component instance that uses this task.
+ * @returns {Task} A Lit Task instance for simulating addon uninstallation.
+ */
 export const createTaskUninstall = (component: any) =>
     new Task(component, {
         autoRun: false,
@@ -91,9 +132,10 @@ export const createTaskUninstall = (component: any) =>
                 || !component._selectedAddon.uninstallScript) {
                 throw new Error();
             }
-            // TODO uninstall addon using uninstallScript
 
-            // Mock wait for uninstall
+            // TODO: Implement actual uninstallation logic using uninstallScript.
+
+            // Simulate uninstallation with a delay.
             await new Promise(resolve => setTimeout(resolve, 2000));
 
             component._installedAddons.delete(component._selectedAddon.id);

@@ -1,14 +1,18 @@
 import { css } from 'lit';
 
+/**
+ * Styles for the `addons-widget` component.
+ *
+ * This file defines the CSS styles for the `addons-widget` component using Lit's `css` tagged template literal.
+ * The styles include variables for theming, layout definitions, and responsive design rules.
+ *
+ * @see {@link https://lit.dev/docs/components/styles/ | Lit Styles Docs}
+ * 
+ * Note: Fonts must be imported in the hosting page and passed via the `--font-family` variable.
+ *
+ * @see {@link https://github.com/lit/lit-element/issues/793 | Lit Font Import Issue}
+ */
 export const widgetStyles = css`
-    /**
-    * There is no possible to use @font-face or @import in Lit yet, 
-    * nighter importing font in <link> in render HTML does not work.
-    * Therefore it is need to already have the font imported in the 
-    * hosting page and use variable --font-family to pass it here.
-    * More about the issue here:
-    * https://github.com/lit/lit-element/issues/793
-    */
     :host {
         --font-family: Arial, serif;
         --font-size: 1rem;
