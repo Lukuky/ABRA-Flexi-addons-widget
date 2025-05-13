@@ -112,9 +112,13 @@ export class WidgetElement extends LitElement {
      */
     _resetSearch() {
         this._addonsPageNum = 0;
-        (this.shadowRoot.getElementById("search") as HTMLInputElement).value = "";
         this._searchPhrase = "";
-        this._selectedCategory = null;
+        // have to reset category this way, because changing this._selectedCategory does not rerender selected option
+        const selectCategory = this.shadowRoot?.getElementById("selectCategory") as HTMLSelectElement;
+        if (selectCategory) {
+            selectCategory.value = "";
+            selectCategory.dispatchEvent(new Event("change"));
+        }
     }
 
     /**
@@ -272,10 +276,12 @@ export class WidgetElement extends LitElement {
                 ${repeat(this._selectedAddon.categories, (name) => html`
                 <dd class='tag'>${name}</dd>
                 `)}
-                <dt>${msg('Vhodné pro varianty', { id: 'for-variants' })}</dt>
+                ${this._selectedAddon.variants.length !== 0
+                ? html`<dt>${msg('Vhodné pro varianty', { id: 'for-variants' })}</dt>
                 ${repeat(this._selectedAddon.variants, (name) => html`
                 <dd class='tag'>${name}</dd>
-                `)}
+                `)}`
+                : nothing}
             </dl>
         `;
 
