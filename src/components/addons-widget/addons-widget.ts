@@ -383,7 +383,7 @@ export class WidgetElement extends LitElement {
                 complete: () => html`
                     <div class='banner'>
                         <div class='banner'>
-                            <p>${msg('Doplněk byl úspěšně odinstalován', { id: 'success-installing-addon' })}</p>
+                            <p>${msg('Doplněk byl úspěšně odinstalován', { id: 'success-uninstalling-addon' })}</p>
                             <button id='backToDetail' class='btnEmpty' @click='${() => { this._cycleUninstall = false }}'>${msg('Zpět na detail', { id: 'back-to-detail' })}</button>
                         </div>
                     </div>

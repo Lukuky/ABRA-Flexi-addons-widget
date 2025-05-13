@@ -57,6 +57,39 @@
 <trans-unit id="more-info">
   <source>Zjistit více</source>
 </trans-unit>
+<trans-unit id="only-by-partner">
+  <source>Pouze vlastní</source>
+</trans-unit>
+<trans-unit id="installed">
+  <source>Instalovaný</source>
+</trans-unit>
+<trans-unit id="installing-addon">
+  <source>Probíhá instalace doplňku</source>
+</trans-unit>
+<trans-unit id="success-installing-addon">
+  <source>Doplněk byl úspěšně nainstalován</source>
+</trans-unit>
+<trans-unit id="back-to-detail">
+  <source>Zpět na detail</source>
+</trans-unit>
+<trans-unit id="error-installing-addon">
+  <source>Nastala chyba při instalaci doplňku</source>
+</trans-unit>
+<trans-unit id="uninstalling-addon">
+  <source>Probíhá odinstalace doplňku</source>
+</trans-unit>
+<trans-unit id="success-uninstalling-addon">
+  <source>Doplněk byl úspěšně odinstalován</source>
+</trans-unit>
+<trans-unit id="error-uninstalling-addon">
+  <source>Nastala chyba při odinstalaci doplňku</source>
+</trans-unit>
+<trans-unit id="uninstall">
+  <source>Odinstalovat</source>
+</trans-unit>
+<trans-unit id="install-in-flexi">
+  <source>Instalovat ve Flexi</source>
+</trans-unit>
 </body>
 </file>
 </xliff>
