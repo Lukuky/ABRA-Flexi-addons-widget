@@ -1,9 +1,9 @@
 :root {
-    --color-primary: hsl(204, 44%, 27%);
-    --color-secondary: hsl(205, 9%, 44%);
-    --color-text: hsl(204, 20%, 20%);
-    --color-bg-primary: hsl(205, 20%, 80%);
-    --color-bg-secondary: hsl(205, 20%, 55%);
+    --color-primary: hsl(0, 0%, 22%);
+    --color-secondary: hsl(0, 0%, 30%);
+    --color-text: hsl(0, 0%, 22%);
+    --color-bg-primary: hsl(46, 72%, 90%);
+    --color-bg-secondary: hsl(46, 72%, 69%);
     --spacing-large: 1.5em;
     --spacing-medium: 0.9em;
     --spacing-small: 0.5em;
@@ -13,18 +13,19 @@
 
 addons-widget {
     --font-family: "Open Sans";
+    --font-weight: medium;
     --font-size: 1rem;
-    --color-primary: hsl(204, 44%, 27%);
-    --text-color-primary: hsl(204, 20%, 20%);
-    --text-color-secondary: hsl(204, 20%, 20%);
-    --bg-color-primary: hsl(205, 20%, 80%);
-    --bg-color-secondary: hsl(205, 20%, 80%);
-    --bg-color-interactive: hsl(0, 0%, 98%);
+    --color-primary: hsl(0, 0%, 22%);
+    --text-color-primary: hsl(0, 0%, 22%);
+    --text-color-secondary: hsl(0, 0%, 30%);
+    --bg-color-primary: #fafafa;
+    --bg-color-secondary: #f4f4f4;
+    --bg-color-interactive: #ffffff;
     --bg-color-tag: #dbdbdb;
-    --border-primary: solid hsl(204, 44%, 27%) 0.15em;
-    --border-interactive: solid hsl(204, 44%, 27%) 0.15em;
-    --border-radius-primary: 0;
-    --border-radius-interactive: 0;
+    --border-primary: solid hsl(0, 0%, 22%) 0.15em;
+    --border-interactive: solid hsl(0, 0%, 22%) 0.15em;
+    --border-radius-primary: 1.5em;
+    --border-radius-interactive: 1em;
     --icons-color: var(--text-color-secondary);
     --addon-overview-height: 20em;
     --addon-overview-margin: 0.6em;
