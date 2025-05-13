@@ -9,9 +9,10 @@ import { allLocales } from '../../generated/locale-codes';
 import '../addons-loader/addons-loader';
 
 import { widgetStyles } from './styles';
-import { getLocale } from './localization';
+import { getLocale, setLocale } from './localization';
 import { Addon, Category, WidgetState } from './types';
 import { createTaskCategories, createTaskAddons, createTaskInstall, createTaskUninstall } from './tasks';
+import { removeRedundantHTML, retrievePerex, localeCategoryName, createAbsoluteLink } from './utils';
 
 /**
  * Main addons widget Lit web component
@@ -114,68 +115,19 @@ export class WidgetElement extends LitElement {
         this._searchPhrase = (this.shadowRoot.getElementById("search") as HTMLInputElement).value;
     }
 
-    // ---------------------- SUPP FUNCTIONS ---------------------- //
-    /**
-     * Remove all style elements and attributes from element subtree including color attribute
-     * Used for unify descriptions and perexes from Flexibee API
-     * @param element root of DOM subtree to have removed styles
-     */
-    _removeRedundantHTML(element: HTMLElement): void {
-        Array.from(element.getElementsByClassName('icon')).forEach(icon => icon.parentNode?.removeChild(icon));
-        Array.from(element.getElementsByTagName('br')).forEach(br => br.parentNode?.removeChild(br));
-        Array.from(element.getElementsByTagName('style')).forEach(style => style.parentNode?.removeChild(style));
-        Array.from(element.getElementsByTagName('*')).forEach(element => {
-            element.removeAttribute("style");
-            element.removeAttribute("color");
-        });
-        Array.from(element.getElementsByTagName('p')).forEach(paragraph => {
-            if (!paragraph.textContent?.trim() && paragraph.children.length === 0) {
-                paragraph.parentNode?.removeChild(paragraph);
-            }
-        });
-    }
-
-    /**
-     * Getting perex out of addon fetched from Flexibee API
-     * @param addon Addon to retrieve perex from
-     * @returns addon perex in HTML
-     */
-    _retrievePerex(addon: Addon) {
-        const perex = document.createElement('p');
-        perex.classList.add('addonPerex');
-        perex.innerHTML = addon.perex;
-        this._removeRedundantHTML(perex);
-        return perex;
-    }
-
     /**
      * Changing locale according to window.location URL
      * @param event Event to target select element with locale codes
      */
     _localeChanged(event: Event) {
         this._selectedLocale = (event.target as HTMLSelectElement).value;
+        setLocale(this._selectedLocale);
     }
 
-    _localeCategoryName(category: Category) {
-        switch (this._selectedLocale) {
-            case 'cs': return category.nameCs;
-            case 'sk': return category.nameSk;
-            case 'en': return category.nameEn;
-            case 'de': return category.nameDe;
-            default: return category.nameCs;
-        }
-    }
     _searchOnEnter(e: Event) {
         if ((e as KeyboardEvent).key === "Enter") {
             this._search();
         }
-    }
-
-    _createAbsoluteLink(url: string) {
-        if (url.startsWith('http://') || url.startsWith('https://')) {
-            return url;
-        }
-        return `https://${url}`
     }
 
     _install() {
@@ -231,7 +183,7 @@ export class WidgetElement extends LitElement {
                     <option value="">--${msg("Všechny", { id: "optionAll" })}--</option>
         ${this._categories.map((category) => {
             return html`
-                <option value="${category.id}" ?selected="${category.id === this._selectedCategory}">${this._localeCategoryName(category)}</option>
+                <option value="${category.id}" ?selected="${category.id === this._selectedCategory}">${localeCategoryName(category, this._selectedLocale)}</option>
             `;
         })}
                 </select>
@@ -303,7 +255,7 @@ export class WidgetElement extends LitElement {
                             : svgAddon()
                         }
                         <h2>${addon.name}</h2>
-                        ${this._retrievePerex(addon)}
+                        ${retrievePerex(addon)}
                         <span class='addonNote'>
                             ${addon.installed
                             ? html`${msg('Instalovaný', { id: 'installed' })}`
@@ -392,7 +344,7 @@ export class WidgetElement extends LitElement {
         const detail = document.createElement('div');
         detail.classList.add('detail');
         detail.innerHTML = this._selectedAddon.description;
-        this._removeRedundantHTML(detail);
+        removeRedundantHTML(detail);
         return detail;
     }
 
@@ -411,7 +363,7 @@ export class WidgetElement extends LitElement {
                                 <img src='${this._selectedAddon.partner.logo}'>
                                 ${this._selectedAddon.partner.url
                                 ? html`
-                                    <a href="${this._createAbsoluteLink(this._selectedAddon.partner.url)}" target="_blank">
+                                    <a href="${createAbsoluteLink(this._selectedAddon.partner.url)}" target="_blank">
                                         <span>${this._selectedAddon.partner.name}</span>
                                     </a>
                                 `
@@ -421,7 +373,7 @@ export class WidgetElement extends LitElement {
                         : nothing}
                         ${this._selectedAddon.linkMore
                         ? html`
-                            <a class="centered" href="${this._createAbsoluteLink(this._selectedAddon.linkMore)}" target="_blank">
+                            <a class="centered" href="${createAbsoluteLink(this._selectedAddon.linkMore)}" target="_blank">
                                 <button class="btnEmpty" > ${msg('Zjistit více', { id: 'more-info' })} </button>
                             </a>
                         `
