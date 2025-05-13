@@ -299,7 +299,7 @@ export class WidgetElement extends LitElement {
                     <div class='cardWrapper'>
                     <article class='addon' tabindex='0' data-id="${addon.id}" @click="${this._goToDetail}">
                         ${addon.photo
-                            ? html`<img src='${addon.photo.toString()}'>`
+                            ? html`<img alt='addon ${addon.id} logo' src='${addon.photo.toString()}'>`
                             : svgAddon()
                         }
                         <h2>${addon.name}</h2>
@@ -353,7 +353,7 @@ export class WidgetElement extends LitElement {
                     <div class='banner'>
                         <div class='banner'>
                             <p>${msg('Doplněk byl úspěšně nainstalován', { id: 'success-installing-addon' })}</p>
-                            <button class='btnEmpty' @click='${() => { this._cycleInstall = false }}'>${msg('Zpět na detail', { id: 'back-to-detail' })}</button>
+                            <button id='backToDetail' class='btnEmpty' @click='${() => { this._cycleInstall = false }}'>${msg('Zpět na detail', { id: 'back-to-detail' })}</button>
                         </div>
                     </div>
                 `,
@@ -377,7 +377,7 @@ export class WidgetElement extends LitElement {
                     <div class='banner'>
                         <div class='banner'>
                             <p>${msg('Doplněk byl úspěšně odinstalován', { id: 'success-installing-addon' })}</p>
-                            <button class='btnEmpty' @click='${() => { this._cycleUninstall = false }}'>${msg('Zpět na detail', { id: 'back-to-detail' })}</button>
+                            <button id='backToDetail' class='btnEmpty' @click='${() => { this._cycleUninstall = false }}'>${msg('Zpět na detail', { id: 'back-to-detail' })}</button>
                         </div>
                     </div>
                 `,
@@ -430,10 +430,10 @@ export class WidgetElement extends LitElement {
                         ? this.installEndpoint
                             ? !this._selectedAddon.installed
                                 ? html`
-                                    <button class="btnFull right" ?hidden=${this._inProgress()} @click="${this._install}" > ${msg('Instalovat', { id: 'install' })} </button>
+                                    <button id="installButton" class="btnFull right" ?hidden=${this._inProgress()} @click="${this._install}" > ${msg('Instalovat', { id: 'install' })} </button>
                                 `
                                 : html`
-                                    <button class="btnFull right" ?hidden=${this._inProgress()} @click="${this._uninstall}" > ${msg('Odinstalovat', { id: 'uninstall' })} </button>
+                                    <button id="uninstallButton" class="btnFull right" ?hidden=${this._inProgress()} @click="${this._uninstall}" > ${msg('Odinstalovat', { id: 'uninstall' })} </button>
                                 `
                             : html`
                                 <a class="centered" href="https://www.abra.eu/flexi/" target="_blank">
