@@ -21,5 +21,13 @@ export default {
             tsconfig: fileURLToPath(new URL('./tsconfig.json', import.meta.url)),
         })
     ],
-    coverage: true
+    coverage: true,
+    coverageConfig: {
+        exclude: [
+            'dist/**',
+            'local_modules/**',
+            'node_modules/**',
+            'test/**',
+        ],
+    },
 };
