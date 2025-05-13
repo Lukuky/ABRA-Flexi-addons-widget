@@ -50,12 +50,10 @@ export const createTaskAddons = (component: any) =>
             const data: AddonsSearch = await response.json();
             component._addonsTotalPages = data.totalPages;
 
-            if (installEndpoint) {
-                component._currentAddons = data.content.map((addon) => ({
-                    ...addon,
-                    installed: installedAddons.has(addon.id),
-                }));
-            }
+            component._currentAddons = data.content.map((addon) => ({
+                ...addon,
+                installed: installEndpoint ? installedAddons.has(addon.id) : false,
+            }));
         },
     });
 
@@ -73,7 +71,7 @@ export const createTaskInstall = (component: any) =>
             // TODO install addon using installScript
 
             // Mock wait for install
-            await new Promise(resolve => setTimeout(resolve, 5000));
+            await new Promise(resolve => setTimeout(resolve, 2000));
 
             component._installedAddons.add(component._selectedAddon.id);
             component._selectedAddon.installed = true;
@@ -96,7 +94,7 @@ export const createTaskUninstall = (component: any) =>
             // TODO uninstall addon using uninstallScript
 
             // Mock wait for uninstall
-            await new Promise(resolve => setTimeout(resolve, 3000));
+            await new Promise(resolve => setTimeout(resolve, 2000));
 
             component._installedAddons.delete(component._selectedAddon.id);
             component._selectedAddon.installed = false;
