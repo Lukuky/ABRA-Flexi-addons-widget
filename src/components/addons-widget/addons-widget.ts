@@ -1,5 +1,5 @@
 import { LitElement, html, nothing } from 'lit';
-import { Task, TaskStatus } from '@lit/task';
+import { TaskStatus } from '@lit/task';
 import { customElement, property, state } from 'lit/decorators.js';
 import { repeat } from 'lit/directives/repeat.js';
 import { msg, localized } from '@lit/localize';
@@ -160,7 +160,7 @@ export class WidgetElement extends LitElement {
 
     /**
      * Checks if an installation or uninstallation process is in progress.
-     * @returns {boolean} True if a process is in progress, otherwise false.
+     * @returns True if a process is in progress, otherwise false.
      */
     _inProgress() {
         return this._taskInstall.status === TaskStatus.PENDING || this._taskUninstall.status === TaskStatus.PENDING;
@@ -448,8 +448,8 @@ export class WidgetElement extends LitElement {
                                     <button id="uninstallButton" class="btnFull right" ?hidden=${this._inProgress()} @click="${this._uninstall}" > ${msg('Odinstalovat', { id: 'uninstall' })} </button>
                                 `
                             : html`
-                                <a class="centered" href="https://www.abra.eu/flexi/" target="_blank">
-                                    <button class="btnFull right" > ${msg('Instalovat ve Flexi', { id: 'install-in-flexi' })} </button>
+                                <a class="right" href="https://www.abra.eu/flexi/" target="_blank">
+                                    <button class="btnFull" > ${msg('Instalovat ve Flexi', { id: 'install-in-flexi' })} </button>
                                 </a>
                             `
                         : nothing}
