@@ -32,63 +32,83 @@
 </trans-unit>
 <trans-unit id="category">
   <source>Kategorie</source>
+  <target>Kategorie</target>
 </trans-unit>
 <trans-unit id="for-variants">
   <source>Vhodné pro varianty</source>
+  <target>Geeignet für Varianten</target>
 </trans-unit>
 <trans-unit id="paid">
   <source>Zpoplatněno</source>
+  <target>Kostenpflichtig</target>
 </trans-unit>
 <trans-unit id="free">
   <source>Zdarma</source>
+  <target>Kostenlos</target>
 </trans-unit>
 <trans-unit id="error-addon-search">
   <source>Nebyl nalezen žádný doplněk.</source>
+  <target>Kein Add-On gefunden.</target>
 </trans-unit>
 <trans-unit id="show-all">
   <source>Zobrazit všechny</source>
+  <target>Alle anzeigen</target>
 </trans-unit>
 <trans-unit id="error-addon-fetch">
   <source>Nastala chyba, doplňky se nepodařilo načíst.</source>
+  <target>Es ist ein Fehler aufgetreten, Add-Ons konnten nicht geladen werden.</target>
 </trans-unit>
 <trans-unit id="try-again">
   <source>Zkusit znovu</source>
+  <target>Erneut versuchen</target>
 </trans-unit>
 <trans-unit id="more-info">
   <source>Zjistit více</source>
+  <target>Mehr erfahren</target>
 </trans-unit>
 <trans-unit id="only-by-partner">
   <source>Pouze vlastní</source>
+  <target>Nur eigene</target>
 </trans-unit>
 <trans-unit id="installed">
   <source>Instalovaný</source>
+  <target>Installiert</target>
 </trans-unit>
 <trans-unit id="installing-addon">
   <source>Probíhá instalace doplňku</source>
+  <target>Die Installation des Add-Ons läuft</target>
 </trans-unit>
 <trans-unit id="success-installing-addon">
   <source>Doplněk byl úspěšně nainstalován</source>
+  <target>Das Add-On wurde erfolgreich installiert</target>
 </trans-unit>
 <trans-unit id="back-to-detail">
   <source>Zpět na detail</source>
+  <target>Zurück zum Detail</target>
 </trans-unit>
 <trans-unit id="error-installing-addon">
   <source>Nastala chyba při instalaci doplňku</source>
+  <target>Fehler bei der Installation des Add-Ons</target>
 </trans-unit>
 <trans-unit id="uninstalling-addon">
   <source>Probíhá odinstalace doplňku</source>
+  <target>Die Deinstallation des Add-Ons läuft</target>
 </trans-unit>
 <trans-unit id="success-uninstalling-addon">
   <source>Doplněk byl úspěšně odinstalován</source>
+  <target>Das Add-On wurde erfolgreich deinstalliert</target>
 </trans-unit>
 <trans-unit id="error-uninstalling-addon">
   <source>Nastala chyba při odinstalaci doplňku</source>
+  <target>Fehler bei der Deinstallation des Add-Ons</target>
 </trans-unit>
 <trans-unit id="uninstall">
   <source>Odinstalovat</source>
+  <target>Deinstallieren</target>
 </trans-unit>
 <trans-unit id="install-in-flexi">
   <source>Instalovat ve Flexi</source>
+  <target>In Flexi installieren</target>
 </trans-unit>
 </body>
 </file>
