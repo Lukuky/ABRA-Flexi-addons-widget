@@ -44,7 +44,7 @@
     "type": "git",
     "url": "git+https://github.com/Lukuky/ABRA-Flexi-addons-widget.git"
   },
-  "version": "0.2.1",
+  "version": "0.2.2",
   "keywords": [
     "widget",
     "web component",
