@@ -135,6 +135,15 @@ export class WidgetElement extends LitElement {
     }
 
     /**
+     * Changes onlyByPartner state according to checkbox value and reset page number.
+     * @param event Event triggered by changing by-partner checkbox.
+     */
+    _onlyByPartnerChanged(event: Event) {
+        this._addonsPageNum = 0;
+        this._onlyByPartner = (event.target as HTMLInputElement).checked;
+    }
+
+    /**
      * Triggers a search when the Enter key is pressed in the search input.
      * @param e Keyboard event.
      */
@@ -229,7 +238,7 @@ export class WidgetElement extends LitElement {
             ${this.partnerId
                 ? html`
                     <div class="checkboxWrapper centered">
-                        <input type="checkbox" id="onlyByPartner" .checked=${this._onlyByPartner} @change="${(e: Event) => this._onlyByPartner = (e.target as HTMLInputElement).checked}" />
+                        <input type="checkbox" id="onlyByPartner" .checked=${this._onlyByPartner} @change="${this._onlyByPartnerChanged}" />
                         <label for="onlyByPartner">${msg("Pouze vlastní", { id: "only-by-partner" })}</label>
                     </div>`
                 : nothing}
