@@ -3,7 +3,7 @@
     "out": "./wiki",
     "name": "TSDoc GitHub Wiki",
     "entryPoints": [
-        "src/index.ts"
+        "src/components/**"
     ],
     "plugin": [
         "typedoc-plugin-missing-exports",
