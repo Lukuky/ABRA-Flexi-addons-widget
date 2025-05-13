@@ -15,6 +15,7 @@ import { css } from 'lit';
 export const widgetStyles = css`
     :host {
         --font-family: Arial, serif;
+        --font-weight: light;
         --font-size: 1rem;
         --color-primary: #0e5dbb;
         --text-color-primary: #000000;
@@ -36,7 +37,7 @@ export const widgetStyles = css`
 
     * {
         font-family: var(--font-family);
-        font-weight: light;
+        font-weight: var(--font-weight);
         padding: 0;
         margin: 0;
     }

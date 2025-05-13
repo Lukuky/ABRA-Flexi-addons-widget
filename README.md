@@ -33,6 +33,7 @@ Customization is possible using web component properties and styles with the `ad
 <style>
     addons-widget {
         --font-family: Arial, serif;
+        --font-weight: light;
         --font-size: 1rem;
         --color-primary: #0e5dbb;
         --text-color-primary: #000000;
