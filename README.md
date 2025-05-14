@@ -19,7 +19,7 @@ This project is licensed under the [MIT License](./LICENSE). Refer to the [third
 
 ## Usage on a Website
 
-To use this widget directly on a production website, include a static import from JSDELIVR (replace `{version}` with the desired version):
+To use this widget directly on a production website, include a static minimized import from JSDELIVR (replace `{version}` with the desired version):
 
 ```html
 <script src="https://cdn.jsdelivr.net/npm/abra-flexi-addons-widget@{version}/dist/index.min.js"></script>
@@ -66,6 +66,11 @@ An example of usage is available in the `/demo` folder, which can be run by simp
 ## Usage in Frameworks
 
 This web component is framework-independent, but additional steps may be required for integration. For instance, in React, the Lit component must be converted into a React component to be used in JSX. Refer to [this guide](https://lit.dev/docs/frameworks/react/) for more details.
+
+To add the widget as a ES module dependency, install it from the NPM registry:
+```bash
+npm install abra-flexi-addons-widget
+```
 
 ## Development
 
