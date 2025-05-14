@@ -1,10 +1,9 @@
 {
     "compilerOptions": {
-        "target": "ES2021",
+        "target": "ES2015",
         "module": "ESNext",
         "moduleResolution": "bundler",
         "experimentalDecorators": true,
-        "useDefineForClassFields": false,
     },
     "exclude": [
         "node_modules",
