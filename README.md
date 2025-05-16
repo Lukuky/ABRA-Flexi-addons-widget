@@ -113,6 +113,8 @@ Run all tests located in the `/src/test` directory:
 npm run test
 ```
 
+Full code converage report is generated in the `/coverage` directory.
+
 For the first run on your machine, install the Playwright browser launchers:
 ```bash
 npx playwright install --with-deps
