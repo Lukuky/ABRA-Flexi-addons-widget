@@ -1,0 +1,64 @@
+{
+  "dependencies": {
+    "@lit/localize": "^0.12.2",
+    "lit": "^3.3.0"
+  },
+  "devDependencies": {
+    "@lit/localize-tools": "^0.8.0",
+    "@lit/task": "^1.0.2",
+    "@microsoft/tsdoc": "^0.15.1",
+    "@open-wc/testing": "^4.0.0",
+    "@rollup/plugin-commonjs": "^28.0.3",
+    "@rollup/plugin-node-resolve": "^16.0.1",
+    "@rollup/plugin-typescript": "^12.1.2",
+    "@types/chai": "^5.2.2",
+    "@types/mocha": "^10.0.10",
+    "@types/node": "^22.15.17",
+    "@web/dev-server-esbuild": "^1.0.4",
+    "@web/test-runner": "^0.20.1",
+    "@web/test-runner-playwright": "^0.11.0",
+    "fetch-mock": "^12.5.2",
+    "glob-to-regexp": "file:local_modules/glob-to-regexp",
+    "mocha": "^11.2.2",
+    "rollup-plugin-dts": "^6.2.1",
+    "ts-loader": "^9.5.2",
+    "ts-node": "^10.9.2",
+    "typedoc": "^0.28.4",
+    "typedoc-github-wiki-theme": "^2.1.0",
+    "typedoc-plugin-markdown": "^4.6.3",
+    "typedoc-plugin-merge-modules": "^7.0.0",
+    "typedoc-plugin-missing-exports": "^4.0.0",
+    "typescript": "^5.8.3"
+  },
+  "scripts": {
+    "clean": "rm -rf ./dist/*",
+    "watch": "npm run clean && rollup --config --watch",
+    "localize": "lit-localize extract && lit-localize build",
+    "build": "npm run clean && rollup --config",
+    "test": "web-test-runner",
+    "docs": "typedoc"
+  },
+  "name": "abra-flexi-addons-widget",
+  "description": "Web component widget for fetching and maintaining ABRA Flexi addons.",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Lukuky/ABRA-Flexi-addons-widget.git"
+  },
+  "version": "0.3.0",
+  "keywords": [
+    "widget",
+    "web component",
+    "ABRA Flexi",
+    "Lit"
+  ],
+  "author": "Lukáš Hubač",
+  "license": "MIT",
+  "type": "module",
+  "main": "./dist/index.js",
+  "module": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "files": [
+    "dist",
+    "thirdPartyNotice.json"
+  ]
+}

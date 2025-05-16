@@ -1,0 +1,133 @@
+name: CI/CD Workflow
+
+on:
+  push:
+    branches:
+      - develop
+      - main
+
+jobs:
+  setup:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Setup Node.js
+        uses: actions/setup-node@main
+        with:
+          node-version: 23
+
+      - name: Cache Dependencies
+        id: cache
+        uses: actions/cache@main
+        with:
+          key: ${{ hashFiles('package-lock.json') }}
+          path: "node_modules"
+
+      - name: Install Dependencies
+        if: steps.cache.outputs.cache-hit != 'true'
+        run: npm ci
+
+      - name: Save Cache State
+        run: echo "CACHE_HIT=${{ steps.cache.outputs.cache-hit }}" >> $GITHUB_ENV
+
+  build:
+    needs: setup
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Setup Node.js
+        uses: actions/setup-node@main
+        with:
+          node-version: 23
+
+      - name: Cache Dependencies
+        uses: actions/cache@main
+        with:
+          key: ${{ hashFiles('package-lock.json') }}
+          path: "node_modules"
+
+      - name: Install Dependencies
+        if: env.CACHE_HIT != 'true'
+        run: npm ci
+
+      - name: Build
+        run: npm run build
+
+      - name: Upload Build Artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: dist
+          path: ./dist
+
+  # https://github.com/rhea-so/tsdoc-github-wiki-example
+  docs:
+    permissions:
+      contents: write
+    needs: setup
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Setup Node.js
+        uses: actions/setup-node@main
+        with:
+          node-version: 23
+
+      - name: Cache Dependencies
+        uses: actions/cache@main
+        with:
+          key: ${{ hashFiles('package-lock.json') }}
+          path: "node_modules"
+
+      - name: Install Dependencies
+        if: env.CACHE_HIT != 'true'
+        run: npm ci
+
+      - name: Generate Docs
+        run: npm run docs
+
+      - name: Sync GitHub Wiki
+        uses: spenserblack/actions-wiki@main
+        with:
+          path: wiki
+
+  test:
+    needs: build
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Setup Node.js
+        uses: actions/setup-node@main
+        with:
+          node-version: 23
+
+      - name: Cache Dependencies
+        uses: actions/cache@main
+        with:
+          key: ${{ hashFiles('package-lock.json') }}
+          path: "node_modules"
+
+      - name: Install Dependencies
+        if: env.CACHE_HIT != 'true'
+        run: npm ci
+
+      - name: Install Playwright
+        run: npx playwright install --with-deps
+
+      - name: Run Tests
+        run: npm run test

@@ -1,0 +1,115 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xliff version="1.2" xmlns="urn:oasis:names:tc:xliff:document:1.2">
+<file target-language="en" source-language="cs" original="lit-localize-inputs" datatype="plaintext">
+<body>
+<trans-unit id="title">
+  <source>Doplňky ABRA Flexi</source>
+  <target>ABRA Flexi addons</target>
+</trans-unit>
+<trans-unit id="install">
+  <source>Instalovat</source>
+  <target>Install</target>
+</trans-unit>
+<trans-unit id="buttonBack">
+  <source>Zpět na přehled</source>
+  <target>Back</target>
+</trans-unit>
+<trans-unit id="labelCategory">
+  <source>Kategorie</source>
+  <target>Category</target>
+</trans-unit>
+<trans-unit id="optionAll">
+  <source>Všechny</source>
+  <target>All</target>
+</trans-unit>
+<trans-unit id="labelSearch">
+  <source>Vyhledat</source>
+  <target>Search</target>
+</trans-unit>
+<trans-unit id="labelLanguage">
+  <source>Jazyk</source>
+  <target>Language</target>
+</trans-unit>
+<trans-unit id="category">
+  <source>Kategorie</source>
+  <target>Category</target>
+</trans-unit>
+<trans-unit id="for-variants">
+  <source>Vhodné pro varianty</source>
+  <target>Suitable for variants</target>
+</trans-unit>
+<trans-unit id="paid">
+  <source>Zpoplatněno</source>
+  <target>Paid</target>
+</trans-unit>
+<trans-unit id="free">
+  <source>Zdarma</source>
+  <target>Free</target>
+</trans-unit>
+<trans-unit id="error-addon-search">
+  <source>Nebyl nalezen žádný doplněk.</source>
+  <target>No addon found.</target>
+</trans-unit>
+<trans-unit id="show-all">
+  <source>Zobrazit všechny</source>
+  <target>Show all</target>
+</trans-unit>
+<trans-unit id="error-addon-fetch">
+  <source>Nastala chyba, doplňky se nepodařilo načíst.</source>
+  <target>An error occurred, addons could not be loaded.</target>
+</trans-unit>
+<trans-unit id="try-again">
+  <source>Zkusit znovu</source>
+  <target>Try again</target>
+</trans-unit>
+<trans-unit id="more-info">
+  <source>Zjistit více</source>
+  <target>Learn more</target>
+</trans-unit>
+<trans-unit id="only-by-partner">
+  <source>Pouze vlastní</source>
+  <target>Only own</target>
+</trans-unit>
+<trans-unit id="installed">
+  <source>Instalovaný</source>
+  <target>Installed</target>
+</trans-unit>
+<trans-unit id="installing-addon">
+  <source>Probíhá instalace doplňku</source>
+  <target>Addon installation in progress</target>
+</trans-unit>
+<trans-unit id="success-installing-addon">
+  <source>Doplněk byl úspěšně nainstalován</source>
+  <target>The addon was successfully installed</target>
+</trans-unit>
+<trans-unit id="back-to-detail">
+  <source>Zpět na detail</source>
+  <target>Back to detail</target>
+</trans-unit>
+<trans-unit id="error-installing-addon">
+  <source>Nastala chyba při instalaci doplňku</source>
+  <target>An error occurred during addon installation</target>
+</trans-unit>
+<trans-unit id="uninstalling-addon">
+  <source>Probíhá odinstalace doplňku</source>
+  <target>Addon uninstallation in progress</target>
+</trans-unit>
+<trans-unit id="success-uninstalling-addon">
+  <source>Doplněk byl úspěšně odinstalován</source>
+  <target>The addon was successfully uninstalled</target>
+</trans-unit>
+<trans-unit id="error-uninstalling-addon">
+  <source>Nastala chyba při odinstalaci doplňku</source>
+  <target>An error occurred during addon uninstallation</target>
+</trans-unit>
+<trans-unit id="uninstall">
+  <source>Odinstalovat</source>
+  <target>Uninstall</target>
+</trans-unit>
+<trans-unit id="install-in-flexi">
+  <source>Instalovat ve Flexi</source>
+  <target>Install in Flexi</target>
+</trans-unit>
+</body>
+</file>
+</xliff>
