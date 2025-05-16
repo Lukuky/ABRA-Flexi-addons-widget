@@ -6,7 +6,10 @@ However, it can also be utilized by anyone for presenting addons on personal web
 
 ## License
 
-This project is licensed under the [MIT License](./LICENSE). Refer to the [third-party notice](./thirdPartyNotice.json) for information about the licenses of the packages used.
+This project is licensed under the MIT License. See the `LICENSE` file for details.
+
+Third-party libraries used in this project are licensed under their respective licenses.
+See the `thirdPartyNotice.json` file for more information.
 
 ## Technology Stack
 
